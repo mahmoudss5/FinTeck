@@ -1,0 +1,35 @@
+---
+config:
+  theme: dark
+---
+flowchart TD
+    Start((Start)) --> ValidateInput[Validate Input Data]
+    ValidateInput --> IsValid{Valid Inputs?}
+
+    IsValid -- No --> ErrorResponse[Return 400 Bad Request]
+    IsValid -- Yes --> FetchWallet[Fetch Sender Wallet]
+
+    FetchWallet --> CheckBalance{Balance >= Amount?}
+
+    CheckBalance -- No --> InsufficientFunds[Return 400 Insufficient Funds]
+    CheckBalance -- Yes --> PrepareAI[Prepare Data for AI Model]
+
+    PrepareAI --> CallAI[Call Python Service]
+    CallAI --> IsFraud{Is Fraud?}
+
+    IsFraud -- Yes --> BlockAction[Block Transaction & Freeze Wallet]
+    BlockAction --> LogFraud[Log Security Alert]
+    LogFraud --> FraudError[Return 403 Forbidden]
+
+    IsFraud -- No --> StartTx[Start DB Transaction]
+    StartTx --> Debit[Debit Sender Wallet]
+    Debit --> Credit[Credit Receiver Wallet]
+    Credit --> SaveLog[Save Transaction History]
+    SaveLog --> CommitTx[Commit Transaction]
+
+    CommitTx --> Success[Return 200 OK]
+
+    ErrorResponse --> End((End))
+    InsufficientFunds --> End
+    FraudError --> End
+    Success --> End

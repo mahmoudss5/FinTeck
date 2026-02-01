@@ -1,0 +1,64 @@
+erDiagram
+%% User Management %%
+    USER {
+        Long id PK
+        String username "Unique"
+        String email "Unique"
+        String password_hash "BCrypt"
+        String first_name
+        String last_name
+        Boolean enabled
+        LocalDateTime created_at
+    }
+
+    ROLE {
+        Long id PK
+        String name "Enum: ROLE_USER, ROLE_ADMIN"
+    }
+
+    USER_ROLES {
+        Long user_id FK
+        Long role_id FK
+    }
+
+%% Financial Core %%
+    WALLET {
+        Long id PK
+        BigDecimal balance "Default 0.00"
+        String currency "USD, EGP"
+        Long version "Optimistic Lock (Start 0)"
+        Boolean active
+        Long user_id FK
+    }
+
+    TRANSACTION {
+        Long id PK
+        BigDecimal amount
+        String type "Enum: TRANSFER, DEPOSIT, WITHDRAW"
+        String status "Enum: PENDING, SUCCESS, FAILED, BLOCKED"
+        String rejection_reason "If Blocked"
+        LocalDateTime created_at
+        Long sender_wallet_id FK
+        Long receiver_wallet_id FK
+    }
+
+%% AI & Security %%
+    FRAUD_CHECK_LOG {
+        Long id PK
+        Long transaction_id FK
+        Boolean is_fraud_detected
+        Double risk_score "From Python AI"
+        String ai_model_version
+        LocalDateTime checked_at
+    }
+
+%% Relationships %%
+    USER ||--o{ USER_ROLES : "has"
+    ROLE ||--o{ USER_ROLES : "assigned to"
+
+    USER ||--o{ WALLET : "owns (1:N)"
+
+    WALLET ||--o{ TRANSACTION : "sends"
+    WALLET ||--o{ TRANSACTION : "receives"
+
+    TRANSACTION ||--o| FRAUD_CHECK_LOG : "audited by AI"
