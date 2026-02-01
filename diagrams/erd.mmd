@@ -13,7 +13,7 @@ erDiagram
 
     ROLE {
         Long id PK
-        String name "Enum: ROLE_USER, ROLE_ADMIN"
+        String name "ROLE_USER, ROLE_ADMIN"
     }
 
     USER_ROLES {
@@ -25,40 +25,78 @@ erDiagram
     WALLET {
         Long id PK
         BigDecimal balance "Default 0.00"
-        String currency "USD, EGP"
-        Long version "Optimistic Lock (Start 0)"
+        String currency "USD, EUR, GBP, EGP..."
+        Long version "Optimistic Lock"
         Boolean active
         Long user_id FK
+        LocalDateTime created_at
+        LocalDateTime updated_at
     }
 
     TRANSACTION {
         Long id PK
         BigDecimal amount
-        String type "Enum: TRANSFER, DEPOSIT, WITHDRAW"
-        String status "Enum: PENDING, SUCCESS, FAILED, BLOCKED"
-        String rejection_reason "If Blocked"
+        String type "TRANSFER, DEPOSIT, WITHDRAW"
+        String status "PENDING, SUCCESS, FAILED"
+        String description
         LocalDateTime created_at
         Long sender_wallet_id FK
         Long receiver_wallet_id FK
     }
 
-%% AI & Security %%
-    FRAUD_CHECK_LOG {
+%% Loan System %%
+    LOAN_APPLICATION {
         Long id PK
-        Long transaction_id FK
-        Boolean is_fraud_detected
-        Double risk_score "From Python AI"
-        String ai_model_version
-        LocalDateTime checked_at
+        BigDecimal amount
+        BigDecimal interest_rate
+        Integer term_months
+        String status "PENDING, APPROVED, REJECTED"
+        String purpose
+        LocalDateTime created_at
+        Long user_id FK
+    }
+
+%% Support System %%
+    SUPPORT_TICKET {
+        Long id PK
+        String subject
+        String description
+        String category
+        String status "OPEN, IN_PROGRESS, RESOLVED, CLOSED"
+        LocalDateTime created_at
+        Long user_id FK
+    }
+
+    SUPPORT_TICKET_RESPONSE {
+        Long id PK
+        String message
+        LocalDateTime created_at
+        Long ticket_id FK
+        Long sender_id FK
+    }
+
+%% Audit %%
+    AUDIT_LOG {
+        Long id PK
+        String action
+        String entity_type
+        Long entity_id
+        String details
+        LocalDateTime created_at
+        Long user_id FK
     }
 
 %% Relationships %%
     USER ||--o{ USER_ROLES : "has"
     ROLE ||--o{ USER_ROLES : "assigned to"
 
-    USER ||--o{ WALLET : "owns (1:N)"
+    USER ||--o{ WALLET : "owns"
+    USER ||--o{ LOAN_APPLICATION : "applies for"
+    USER ||--o{ SUPPORT_TICKET : "creates"
+    USER ||--o{ AUDIT_LOG : "generates"
 
     WALLET ||--o{ TRANSACTION : "sends"
     WALLET ||--o{ TRANSACTION : "receives"
 
-    TRANSACTION ||--o| FRAUD_CHECK_LOG : "audited by AI"
+    SUPPORT_TICKET ||--o{ SUPPORT_TICKET_RESPONSE : "has"
+    USER ||--o{ SUPPORT_TICKET_RESPONSE : "writes"

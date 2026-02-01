@@ -3,7 +3,6 @@ graph TD
     classDef client fill:#f9f,stroke:#333,stroke-width:2px,color:black;
     classDef frontend fill:#61dafb,stroke:#333,stroke-width:2px,color:black;
     classDef backend fill:#6db33f,stroke:#333,stroke-width:2px,color:white;
-    classDef ai fill:#ffd43b,stroke:#333,stroke-width:2px,color:black;
     classDef database fill:#00758f,stroke:#333,stroke-width:2px,color:white;
 
 %% Nodes %%
@@ -13,35 +12,31 @@ graph TD
     end
 
     subgraph App_Layer ["⚛️ Frontend Layer"]
-    %% التغيير هنا: حطينا علامات تنصيص حول الكلام
-        ReactApp["React JS Application<br/>(Vite + Axios)"]:::frontend
+        ReactApp["React 19 Application<br/>(Vite + Tailwind CSS)"]:::frontend
+        AuthContext["Auth Context<br/>(JWT Token Management)"]:::frontend
     end
 
     subgraph Server_Side ["⚙️ Backend Infrastructure"]
-        SpringBoot["🍃 Spring Boot Core<br/>(Security, MVC, Data)"]:::backend
-
-        subgraph Intelligence ["🧠 AI Layer"]
-            PythonService["🐍 Python Flask/FastAPI<br/>(Fraud Detection Model)"]:::ai
-        end
+        SpringBoot["🍃 Spring Boot 3.4<br/>(Security, MVC, Data JPA)"]:::backend
+        JWTFilter["JWT Auth Filter"]:::backend
+        Services["Business Services<br/>(User, Wallet, Loan, Transaction)"]:::backend
     end
 
     subgraph Data_Layer ["🗄️ Persistence Layer"]
-        MySQL[("🐬 MySQL Database<br/>Users, Wallets, Transactions")]:::database
+        MySQL[("🐬 MySQL Database<br/>Users, Wallets, Transactions<br/>Loans, Support Tickets")]:::database
     end
 
 %% Relationships %%
     User -- "Opens App" --> Browser
     Browser -- "Renders" --> ReactApp
+    ReactApp -- "Manages Auth State" --> AuthContext
 
-    ReactApp -- "1. REST API Requests (JSON)<br/>(Auth, Transfer, Balance)" --> SpringBoot
+    ReactApp -- "1. REST API Requests (JSON)<br/>(Login, Register, Transfer)" --> JWTFilter
+    JWTFilter -- "2. Validate JWT Token" --> SpringBoot
+    SpringBoot -- "3. Process Business Logic" --> Services
 
-    SpringBoot -- "2. Check Fraud (HTTP POST)" --> PythonService
-    PythonService -- "3. Return Prediction (Fraud/Safe)" --> SpringBoot
-
-    SpringBoot -- "4. Read/Write Data (JPA/Hibernate)" --> MySQL
+    Services -- "4. Read/Write Data (JPA/Hibernate)" --> MySQL
 
 %% Styles %%
     linkStyle 2 stroke:#61dafb,stroke-width:2px;
-    linkStyle 3 stroke:#ffd43b,stroke-width:3px,dasharray: 5 5;
-    linkStyle 4 stroke:#ffd43b,stroke-width:3px,dasharray: 5 5;
     linkStyle 5 stroke:#6db33f,stroke-width:2px;

@@ -2,32 +2,17 @@
 
 A full-stack banking application built with Spring Boot and React, providing digital wallet management, fund transfers, loan applications, and customer support features.
 
-## Table of Contents
+## 🌟 Features
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
-- [API Documentation](#api-documentation)
-- [Database Schema](#database-schema)
-- [API Endpoints](#api-endpoints)
-- [Testing](#testing)
-- [Security](#security)
-
-## Features
-
-- **User Management**: Registration, authentication, and profile management
-- **Digital Wallets**: Multi-currency wallet support with real-time balance tracking
+- **User Authentication**: JWT-based registration and login with role-based access
+- **Digital Wallets**: Multi-currency wallet support (USD, EUR, GBP, JPY, CAD, AUD, CHF, EGP)
 - **Fund Transfers**: Secure money transfers between wallets with optimistic locking
-- **Loan Applications**: Submit and track loan applications with status updates
-- **Transaction History**: View transaction history with monthly report generation
-- **Support Tickets**: Customer support system with ticket tracking and responses
-- **Audit Logging**: Track user actions for security and compliance
+- **Loan Applications**: Submit and track loan applications with calculator
+- **Transaction History**: View, filter, and search transactions with monthly reports
+- **Support Tickets**: Customer support system with ticket tracking
+- **Modern UI**: Dark theme with amber/gold accents, responsive design
 
-## Tech Stack
+## 🛠 Tech Stack
 
 ### Backend
 
@@ -37,11 +22,10 @@ A full-stack banking application built with Spring Boot and React, providing dig
 | Spring Boot       | 3.4.1   | Application Framework            |
 | Spring Security   | -       | Authentication & Authorization   |
 | Spring Data JPA   | -       | Data Persistence                 |
-| MySQL             | 8.x     | Production Database              |
+| MySQL             | 8.x     | Database                         |
 | Flyway            | -       | Database Migrations              |
 | Lombok            | -       | Code Generation                  |
 | SpringDoc OpenAPI | 2.7.0   | API Documentation                |
-| Spring Retry      | 2.0.6   | Retry Mechanism for Transactions |
 
 ### Frontend
 
@@ -52,40 +36,47 @@ A full-stack banking application built with Spring Boot and React, providing dig
 | React Router | 7.13.0  | Client-side Routing |
 | Tailwind CSS | 4.1.18  | Styling             |
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 finTech/
 ├── BackEnd/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/BankSystem/demo/
-│   │   │   │   ├── BusinessLogic/
-│   │   │   │   │   ├── Services/          # Service interfaces
-│   │   │   │   │   └── ServicesImp/       # Service implementations
-│   │   │   │   ├── Config/                # Security, Exception handling
-│   │   │   │   ├── Controllers/           # REST API endpoints
-│   │   │   │   └── DataAccessLayer/
-│   │   │   │       ├── DTOs/              # Data Transfer Objects
-│   │   │   │       ├── Entites/           # JPA Entities
-│   │   │   │       └── Repositories/      # Spring Data Repositories
-│   │   │   └── resources/
-│   │   │       ├── application.properties # App configuration
-│   │   │       └── db/migration/          # Flyway migrations
-│   │   └── test/                          # Unit & Integration tests
-│   └── pom.xml
+│   ├── src/main/java/BankSystem/demo/
+│   │   ├── BusinessLogic/
+│   │   │   ├── Services/           # Service interfaces
+│   │   │   └── ServicesImp/        # Service implementations
+│   │   ├── Config/                 # Security, JWT, Exception handling
+│   │   ├── Controllers/            # REST API endpoints
+│   │   └── DataAccessLayer/
+│   │       ├── DTOs/               # Data Transfer Objects
+│   │       ├── Entites/            # JPA Entities
+│   │       └── Repositories/       # Spring Data Repositories
+│   └── src/main/resources/
+│       ├── application.properties  # App configuration
+│       └── db/migration/           # Flyway migrations
 │
 └── FrontEnd/cashMe/
-    ├── src/
-    │   ├── Components/                    # Reusable UI components
-    │   ├── Pages/                         # Page components
-    │   ├── App.jsx                        # Main app component
-    │   └── main.jsx                       # Entry point
-    ├── package.json
-    └── vite.config.js
+    └── src/
+        ├── Components/             # Reusable UI components
+        │   ├── Nav.jsx             # Navigation bar
+        │   ├── Footer.jsx          # Footer component
+        │   ├── ProtectedRoute.jsx  # Auth route guard
+        │   └── ...
+        ├── Pages/                  # Page components
+        │   ├── Login.jsx           # Login page
+        │   ├── Register.jsx        # Registration page
+        │   ├── Dashboard.jsx       # Main dashboard
+        │   ├── Wallets.jsx         # Wallet management
+        │   ├── Transaction.jsx     # Transaction history
+        │   ├── Loan.jsx            # Loan applications
+        │   └── ComingSoon.jsx      # Placeholder page
+        └── services/               # API & Auth services
+            ├── AuthProvider.jsx    # Auth context provider
+            ├── authService.js      # API calls (login, register)
+            └── config.jsx          # API configuration
 ```
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -97,98 +88,54 @@ finTech/
 ### Backend Setup
 
 1. **Clone the repository**
-
    ```bash
    git clone <repository-url>
    cd finTech
    ```
 
-2. **Configure the database**
-
-   Create a MySQL database:
-
+2. **Create MySQL database**
    ```sql
    CREATE DATABASE azbanking;
    ```
 
-3. **Update database credentials**
+3. **Configure database credentials**
 
    Edit `BackEnd/src/main/resources/application.properties`:
-
    ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/azbanking
    spring.datasource.username=your_username
    spring.datasource.password=your_password
+   jwt.secret=your-jwt-secret-key
    ```
 
 4. **Run the application**
-
    ```bash
    cd BackEnd
    ./mvnw spring-boot:run
    ```
-
-   The backend will start on `http://localhost:8080`
+   Backend starts at `http://localhost:8080`
 
 5. **Access Swagger UI**
 
-   Open `http://localhost:8080/swagger-ui.html` for API documentation
+   Open `http://localhost:8080/swagger-ui.html`
 
 ### Frontend Setup
 
 1. **Install dependencies**
-
    ```bash
    cd FrontEnd/cashMe
    npm install
    ```
 
 2. **Start development server**
-
    ```bash
    npm run dev
    ```
+   Frontend starts at `http://localhost:5173`
 
-   The frontend will start on `http://localhost:5173`
+## 📡 API Endpoints
 
-## API Documentation
-
-Interactive API documentation is available via Swagger UI at:
-
-```
-http://localhost:8080/swagger-ui.html
-```
-
-## Database Schema
-
-### Core Entities
-
-| Entity                    | Description                                 |
-| ------------------------- | ------------------------------------------- |
-| **User**                  | User accounts with authentication details   |
-| **Role**                  | User roles for access control               |
-| **Wallet**                | Digital wallets with multi-currency support |
-| **Transaction**           | Fund transfer records                       |
-| **LoanApplication**       | Loan request details and status             |
-| **SupportTicket**         | Customer support tickets                    |
-| **SupportTicketResponse** | Responses to support tickets                |
-| **AuditLog**              | System activity audit trail                 |
-
-### Database Migrations
-
-Migrations are managed by Flyway and located in `src/main/resources/db/migration/`:
-
-| Migration                          | Description                                                      |
-| ---------------------------------- | ---------------------------------------------------------------- |
-| V1\_\_init_schema.sql              | Initial schema (users, roles, wallets, transactions, audit_logs) |
-| V2\_\_Add_version_to_wallet.sql    | Optimistic locking support                                       |
-| V3\_\_Add_Reports_Table.sql        | Support ticket system                                            |
-| V4\_\_Add_ReportResponse_table.sql | Ticket responses                                                 |
-| V5\_\_Add_Loan_Table.sql           | Loan applications                                                |
-
-## API Endpoints
-
-### Authentication (`/auth/api`)
+### Authentication (`/api/v1/auth`)
 
 | Method | Endpoint    | Description       |
 | ------ | ----------- | ----------------- |
@@ -199,6 +146,7 @@ Migrations are managed by Flyway and located in `src/main/resources/db/migration
 
 | Method | Endpoint          | Description     |
 | ------ | ----------------- | --------------- |
+| GET    | `/me`             | Get current user profile |
 | GET    | `/{userId}`       | Get user by ID  |
 | GET    | `/all`            | Get all users   |
 | POST   | `/updatePassword` | Update password |
@@ -206,14 +154,14 @@ Migrations are managed by Flyway and located in `src/main/resources/db/migration
 
 ### Wallets (`/wallets/api`)
 
-| Method | Endpoint             | Description      |
-| ------ | -------------------- | ---------------- |
-| POST   | `/create`            | Create wallet    |
-| GET    | `/{walletId}`        | Get wallet by ID |
-| GET    | `/all`               | Get all wallets  |
-| PUT    | `/update/{walletId}` | Update wallet    |
-| DELETE | `/delete/{walletId}` | Delete wallet    |
-| PUT    | `/transfer`          | Transfer funds   |
+| Method | Endpoint                 | Description        |
+| ------ | ------------------------ | ------------------ |
+| POST   | `/create`                | Create wallet      |
+| GET    | `/{walletId}`            | Get wallet by ID   |
+| GET    | `/all`                   | Get all wallets    |
+| PUT    | `/deactivate/{walletId}` | Deactivate wallet  |
+| DELETE | `/delete/{walletId}`     | Delete wallet      |
+| PUT    | `/transfer`              | Transfer funds     |
 
 ### Transactions (`/transactions/api`)
 
@@ -242,92 +190,64 @@ Migrations are managed by Flyway and located in `src/main/resources/db/migration
 | ------ | ---------------------- | --------------- |
 | POST   | `/`                    | Create ticket   |
 | GET    | `/{ticketId}`          | Get by ID       |
-| GET    | `/`                    | Get all tickets |
 | GET    | `/user/{userId}`       | Get by user     |
 | GET    | `/status/{status}`     | Get by status   |
-| GET    | `/category/{category}` | Get by category |
-| PUT    | `/{ticketId}`          | Update ticket   |
 | PATCH  | `/{ticketId}/status`   | Update status   |
 | DELETE | `/{ticketId}`          | Delete ticket   |
 
-### Support Ticket Responses (`/support-ticket-responses/api`)
+## 🗄 Database Schema
 
-| Method | Endpoint             | Description     |
-| ------ | -------------------- | --------------- |
-| POST   | `/`                  | Create response |
-| GET    | `/{responseId}`      | Get by ID       |
-| GET    | `/ticket/{ticketId}` | Get by ticket   |
-| GET    | `/sender/{senderId}` | Get by sender   |
-| DELETE | `/{responseId}`      | Delete response |
+### Core Entities
 
-## Testing
+| Entity              | Description                                 |
+| ------------------- | ------------------------------------------- |
+| **User**            | User accounts with authentication details   |
+| **Role**            | User roles (ROLE_USER, ROLE_ADMIN)          |
+| **Wallet**          | Digital wallets with multi-currency support |
+| **Transaction**     | Fund transfer records                       |
+| **LoanApplication** | Loan request details and status             |
+| **SupportTicket**   | Customer support tickets                    |
+| **AuditLog**        | System activity audit trail                 |
 
-### Run All Tests
+### Migrations (Flyway)
 
-```bash
-cd BackEnd
-./mvnw test
-```
+| Migration | Description |
+| --------- | ----------- |
+| V1        | Initial schema (users, roles, wallets, transactions, audit_logs) |
+| V2        | Add version column for optimistic locking |
+| V3        | Add support ticket system |
+| V4        | Add ticket response table |
+| V5        | Add loan applications table |
 
-### Run Specific Test Class
+## 🔒 Security
 
-```bash
-./mvnw test -Dtest=UserServiceImpTest
-```
-
-### Test Coverage
-
-The project includes tests for:
-
-- Service layer (business logic)
-- Controller layer (API endpoints)
-- Repository layer (data access)
-
-Test database: H2 (in-memory) for isolation
-
-## Security
-
-### Features
-
+- **JWT Authentication**: Token-based stateless authentication
 - **Password Encryption**: BCrypt hashing
-- **CSRF Protection**: Disabled for API (stateless)
+- **CORS Configuration**: Configured for frontend origin
 - **Role-Based Access**: User roles for authorization
-- **Optimistic Locking**: Prevents concurrent update conflicts on wallets
-- **Audit Logging**: Tracks user actions
+- **Optimistic Locking**: Prevents concurrent wallet update conflicts
+- **Protected Routes**: Frontend route guards for authenticated pages
 
 ### Public Endpoints
-
-- `/auth/api/**` - Authentication
+- `/api/v1/auth/**` - Authentication
 - `/swagger-ui/**` - API Documentation
-- `/v3/api-docs/**` - OpenAPI specs
 
 ### Protected Endpoints
+All other endpoints require JWT token in Authorization header.
 
-All other endpoints require authentication.
+## 🎨 Frontend Features
 
-## Environment Variables
+- **Dark Theme**: Modern dark UI with amber/gold accents
+- **Responsive Design**: Works on desktop and mobile
+- **Protected Routes**: Automatic redirect to login for unauthenticated users
+- **Loading States**: Styled loading spinners
+- **Error Handling**: User-friendly error messages
+- **Authentication Context**: Global auth state management
 
-For production, configure these environment variables:
-
-| Variable      | Description                         |
-| ------------- | ----------------------------------- |
-| `DB_URL`      | Database connection URL             |
-| `DB_USERNAME` | Database username                   |
-| `DB_PASSWORD` | Database password                   |
-| `JWT_SECRET`  | JWT signing secret  |
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
+## 📝 License
 
 This project is for educational purposes.
 
 ---
 
-**Note**: This is a development project. For production deployment, ensure proper security configurations, environment variable management, and database credentials protection.
+**Note**: This is a development/educational project. For production deployment, ensure proper security configurations and environment variable management.

@@ -125,9 +125,8 @@ note : for the deteLoan api make it return the loanResponeDto not void and delte
 
 ### Test Credentials
 
-- Username:
-- Email:mahmoud@gmail.com
-- Password:test1234
+> ⚠️ **Note**: Create your own test user via the registration endpoint.
+> Do not commit real credentials to version control.
 
 ### Issues Found
 

@@ -1,0 +1,88 @@
+# ========================
+# Java / Spring Boot
+# ========================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.swp
+*.swo
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+*.tar.gz
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Logs
+*.log
+logs/
+
+# ========================
+# Node.js / React
+# ========================
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# Sensitive Files
+# ========================
+# Never commit these!
+*.pem
+*.key
+*.p12
+*.jks
+secrets/
+credentials/
+
+# Application properties with secrets
+# (use application-local.properties for local dev)
+**/src/main/resources/application-local.properties
+
+# ========================
+# OS Generated
+# ========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ========================
+# Project Specific
+# ========================
+# AI Models (likely large files)
+AiModel/
+
+# IntelliJ project file
+demo.iml

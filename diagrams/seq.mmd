@@ -1,44 +1,47 @@
 sequenceDiagram
     autonumber
-    actor User as  User (React)
-    participant API as  Spring Boot (Backend)
-    participant DB as  MySQL Database
-    participant AI as  AI Service (Python)
+    actor User as User (React)
+    participant Auth as AuthProvider
+    participant API as Spring Boot API
+    participant JWT as JWT Filter
+    participant Service as WalletService
+    participant DB as MySQL Database
 
-    Note over User, API: 1. User initiates Transfer
-    User->>API: POST /transfer {receiver, amount}
+    Note over User, API: 1. User Login Flow
+    User->>Auth: Enter credentials
+    Auth->>API: POST /api/v1/auth/login
+    API->>DB: Validate credentials
+    DB-->>API: User found
+    API-->>Auth: Return JWT token
+    Auth->>Auth: Store token in localStorage
 
-    activate API
+    Note over User, API: 2. Fund Transfer Flow
+    User->>Auth: Initiate transfer
+    Auth->>API: PUT /wallets/api/transfer
+    API->>JWT: Validate JWT token
+    
+    alt Invalid Token
+        JWT-->>User: 401 Unauthorized
+    else Valid Token
+        JWT->>Service: Process transfer request
+        Service->>DB: Fetch sender wallet with version
+        DB-->>Service: Wallet data + version
 
-    Note right of API: Step 1: Validation & Balance Check
-    API->>DB: Select Wallet (Sender)
-    DB-->>API: Return Wallet Data + Balance
-
-    alt Insufficient Balance
-        API-->>User: Error: Insufficient Funds
-    else Balance OK
-
-        Note right of API: Step 2: Fraud Detection (Integration)
-        API->>API: Map Data to FraudCheckRequest
-        API->>AI: POST /predict-fraud (amount, time, history)
-
-        activate AI
-        AI-->>API: Return { isFraud: boolean }
-        deactivate AI
-
-        alt Fraud Detected
-            API->>DB: Log Attempt as "BLOCKED"
-            API-->>User: Error: Transaction Suspicious!
-        else Safe Transaction
-
-            Note right of API: Step 3: Atomic Transaction
-            API->>DB: Begin Transaction
-            API->>DB: Update Sender Balance (-)
-            API->>DB: Update Receiver Balance (+)
-            API->>DB: Save Transaction Record
-            DB-->>API: Commit Success
-
-            API-->>User: Success: Transfer Complete
+        alt Insufficient Balance
+            Service-->>User: 400 Insufficient Funds
+        else Balance OK
+            Service->>DB: BEGIN TRANSACTION
+            Service->>DB: UPDATE sender balance (version check)
+            
+            alt Version Conflict
+                DB-->>Service: OptimisticLockException
+                Service-->>User: 409 Conflict - Retry
+            else Version OK
+                Service->>DB: UPDATE receiver balance
+                Service->>DB: INSERT transaction record
+                Service->>DB: COMMIT
+                DB-->>Service: Success
+                Service-->>User: 200 OK - Transfer Complete
+            end
         end
     end
-    deactivate API
