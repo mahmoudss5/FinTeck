@@ -1,53 +1,14 @@
 import NoWalletsFound from "../Components/NoWalletsFound.jsx";
-import AvilableWallets from "../Components/AvilableWallets.jsx";
+import AvailableWallets from "../Components/AvailableWallets.jsx";
+import { useLoaderData } from "react-router-dom";
 
 export default function Wallets() {
-
-    const wallets = [
-        {
-            walletId: '1',
-            walletCurrency:'Usd',
-            walletBalance:'100000',
-            walletStatus:'Active',
-            walletType:'Checking',
-            walletCreatedAt:'2024-01-01',
-            walletUpdatedAt:'2024-01-01'
-        },
-        {
-            walletId: '2',
-            walletCurrency:'Usd',
-            walletBalance:'100000',
-            walletStatus:'Active',
-            walletType:'Checking',
-            walletCreatedAt:'2024-01-01',
-            walletUpdatedAt:'2024-01-01'
-        },
-        {
-            walletId: '3',
-            walletCurrency:'Usd',
-            walletBalance:'100000',
-            walletStatus:'Active',
-            walletType:'Checking',
-            walletCreatedAt:'2024-01-01',
-            walletUpdatedAt:'2024-01-01'
-        },
-        {
-            walletId: '4',
-            walletCurrency:'Usd',
-            walletBalance:'100000',
-            walletStatus:'Active',
-            walletType:'Checking',
-            walletCreatedAt:'2024-01-01',
-            walletUpdatedAt:'2024-01-01'
-        },
-    ]
-
-
+    const wallets = useLoaderData();
 
     return (
         <>
             {wallets.length===0 && <NoWalletsFound/>}
-            {wallets.length!==0 && <AvilableWallets Wallets={wallets}/>}
+            {wallets.length!==0 && <AvailableWallets Wallets={wallets}/>}
 
         </>
     )

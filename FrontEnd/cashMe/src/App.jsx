@@ -12,6 +12,10 @@ import CreateWallet from "./Pages/CreateWallet.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import Login from "./Pages/Login.jsx";
 import ComingSoon from "./Pages/ComingSoon.jsx";
+import AdminDashboard from "./Pages/AdminDashboard.jsx";
+import { getAllWallets } from "./services/WalletService.js";
+import LoadingSpinner from "./Components/LoadingSpinner.jsx";
+import CreateTransaction from "./Components/CreateTransaction.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -47,11 +51,20 @@ function App() {
         },
         {
           path: 'transactions',
-          element: <ProtectedRoute><Transaction /></ProtectedRoute>
+          element: <ProtectedRoute><Transaction /></ProtectedRoute>,
+          children: [
+            {
+              path:'add',
+              element: <ProtectedRoute>
+                <CreateTransaction/>
+                </ProtectedRoute>
+            }
+          ]
         },
         {
           path: 'wallets',
-          element: <ProtectedRoute><Wallets /></ProtectedRoute>
+          element: <ProtectedRoute><Wallets /></ProtectedRoute>,
+          loader: getAllWallets
         },
         {
           path: 'wallets/:id',
@@ -64,6 +77,12 @@ function App() {
         {
           path: 'coming-soon',
           element: <ProtectedRoute><ComingSoon /></ProtectedRoute>
+        },
+        {
+          path: 'admin-dashboard',
+          element: <ProtectedRoute>
+            <AdminDashboard />
+            </ProtectedRoute>
         }
       ]
     }
@@ -74,7 +93,8 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router}></RouterProvider>
+      <RouterProvider router={router} 
+      fallbackElement={<LoadingSpinner />} />
     </>
   )
 }

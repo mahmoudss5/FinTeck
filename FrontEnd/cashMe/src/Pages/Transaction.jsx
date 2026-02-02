@@ -1,132 +1,52 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link, Outlet } from 'react-router-dom';
+import { useAuth } from '../services/AuthProvider';
+import { getAllTransactions } from '../services/TransactionService';
 
 export default function Transaction() {
+    const { user } = useAuth();
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Dummy transaction data
-    const transactions = [
-        {
-            id: 'TXN001',
-            type: 'received',
-            amount: 5000.00,
-            description: 'Salary Deposit',
-            senderName: 'ABC Corporation',
-            senderWallet: 'USD Wallet',
-            receiverName: 'John Doe',
-            receiverWallet: 'Main Wallet',
-            status: 'completed',
-            date: '2026-01-27',
-            time: '09:30 AM',
-            category: 'Income'
-        },
-        {
-            id: 'TXN002',
-            type: 'sent',
-            amount: 150.00,
-            description: 'Electric Bill Payment',
-            senderName: 'John Doe',
-            senderWallet: 'Main Wallet',
-            receiverName: 'City Power Co.',
-            receiverWallet: 'Business Account',
-            status: 'completed',
-            date: '2026-01-26',
-            time: '02:15 PM',
-            category: 'Utilities'
-        },
-        {
-            id: 'TXN003',
-            type: 'sent',
-            amount: 89.99,
-            description: 'Online Shopping',
-            senderName: 'John Doe',
-            senderWallet: 'USD Wallet',
-            receiverName: 'Amazon',
-            receiverWallet: 'Merchant Account',
-            status: 'completed',
-            date: '2026-01-25',
-            time: '11:45 AM',
-            category: 'Shopping'
-        },
-        {
-            id: 'TXN004',
-            type: 'received',
-            amount: 850.00,
-            description: 'Freelance Payment',
-            senderName: 'Tech Startup Inc.',
-            senderWallet: 'Business Wallet',
-            receiverName: 'John Doe',
-            receiverWallet: 'Main Wallet',
-            status: 'completed',
-            date: '2026-01-24',
-            time: '04:20 PM',
-            category: 'Income'
-        },
-        {
-            id: 'TXN005',
-            type: 'sent',
-            amount: 500.00,
-            description: 'Transfer to Savings',
-            senderName: 'John Doe',
-            senderWallet: 'Main Wallet',
-            receiverName: 'John Doe',
-            receiverWallet: 'Savings Wallet',
-            status: 'completed',
-            date: '2026-01-23',
-            time: '10:00 AM',
-            category: 'Transfer'
-        },
-        {
-            id: 'TXN006',
-            type: 'sent',
-            amount: 45.00,
-            description: 'Netflix Subscription',
-            senderName: 'John Doe',
-            senderWallet: 'USD Wallet',
-            receiverName: 'Netflix',
-            receiverWallet: 'Merchant Account',
-            status: 'completed',
-            date: '2026-01-22',
-            time: '12:00 AM',
-            category: 'Entertainment'
-        },
-        {
-            id: 'TXN007',
-            type: 'received',
-            amount: 200.00,
-            description: 'Refund - Order #12345',
-            senderName: 'RetailStore',
-            senderWallet: 'Business Account',
-            receiverName: 'John Doe',
-            receiverWallet: 'Main Wallet',
-            status: 'completed',
-            date: '2026-01-21',
-            time: '03:30 PM',
-            category: 'Refund'
-        },
-        {
-            id: 'TXN008',
-            type: 'sent',
-            amount: 1200.00,
-            description: 'Rent Payment',
-            senderName: 'John Doe',
-            senderWallet: 'Main Wallet',
-            receiverName: 'Property Management LLC',
-            receiverWallet: 'Business Account',
-            status: 'pending',
-            date: '2026-01-20',
-            time: '09:00 AM',
-            category: 'Housing'
-        },
-    ];
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                setLoading(true);
+                const data = await getAllTransactions();
+                // Map backend data to frontend format
+                const mapped = data.map((txn, index) => ({
+                    id: `TXN${String(index + 1).padStart(3, '0')}`,
+                    type: txn.receiverUserName === user?.userName ? 'received' : 'sent',
+                    amount: parseFloat(txn.amount),
+                    senderName: txn.senderUserName,
+                    receiverName: txn.receiverUserName,
+                    status: txn.status?.toLowerCase() || 'completed',
+                    date: txn.createdAt ? new Date(txn.createdAt).toLocaleDateString('en-US') : 'N/A',
+                    time: txn.createdAt ? new Date(txn.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'N/A',
+                    currency: txn.currency || 'USD'
+                }));
+                setTransactions(mapped);
+            } catch (err) {
+                setError(err.message);
+                console.error("Error fetching transactions:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTransactions();
+    }, [user?.userName]);
 
     // Filter transactions
     const filteredTransactions = transactions.filter(txn => {
         const matchesFilter = filter === 'all' || txn.type === filter;
-        const matchesSearch = txn.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        const matchesSearch = 
             txn.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            txn.senderName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            txn.receiverName.toLowerCase().includes(searchTerm.toLowerCase());
+            txn.senderName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            txn.receiverName?.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesFilter && matchesSearch;
     });
 
@@ -143,47 +63,24 @@ export default function Transaction() {
         return styles[status] || styles.pending;
     };
 
-    const getCategoryIcon = (category) => {
-        const icons = {
-            Income: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            ),
-            Utilities: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-            ),
-            Shopping: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-            ),
-            Transfer: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-            ),
-            Entertainment: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            ),
-            Refund: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                </svg>
-            ),
-            Housing: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-            )
-        };
-        return icons[category] || icons.Income;
-    };
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-400">Loading transactions...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
+                <p className="text-red-400">Error loading transactions: {error}</p>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -193,12 +90,11 @@ export default function Transaction() {
                     <h1 className="text-2xl font-bold text-white">Transactions</h1>
                     <p className="text-gray-400">View and manage all your transactions</p>
                 </div>
-                <button className="px-4 py-2 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-black font-semibold rounded-lg hover:from-amber-500 hover:via-yellow-400 hover:to-amber-500 transition-all duration-200 shadow-lg shadow-amber-500/20 flex items-center gap-2 w-fit">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    New Transfer
-                </button>
+                <Link to="add">
+                    <button className="cursor-pointer px-4 py-2 bg-linear-to-r from-amber-600 via-yellow-500 to-amber-600 text-black font-semibold rounded-lg hover:from-amber-500 hover:via-yellow-400 hover:to-amber-500 transition-all duration-200 shadow-lg shadow-amber-500/20 flex items-center gap-2 w-fit">
+                        New Transfer +
+                    </button>
+                </Link>
             </div>
 
             {/* Summary Cards */}
@@ -214,7 +110,7 @@ export default function Transaction() {
                         </span>
                     </div>
                     <p className="text-2xl font-bold text-white">{transactions.length}</p>
-                    <p className="text-sm text-gray-500 mt-2">This month</p>
+                    <p className="text-sm text-gray-500 mt-2">All time</p>
                 </div>
 
                 {/* Money Received */}
@@ -305,7 +201,7 @@ export default function Transaction() {
                 <div className="hidden md:grid grid-cols-12 gap-4 p-4 bg-[#242424] border-b border-amber-900/20 text-gray-400 text-sm font-medium">
                     <div className="col-span-4">Transaction</div>
                     <div className="col-span-2">Date</div>
-                    <div className="col-span-2">Category</div>
+                    <div className="col-span-2">Currency</div>
                     <div className="col-span-2">Status</div>
                     <div className="col-span-2 text-right">Amount</div>
                 </div>
@@ -341,8 +237,7 @@ export default function Transaction() {
                                         )}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-white font-medium truncate">{txn.description}</p>
-                                        <p className="text-gray-500 text-sm truncate">
+                                        <p className="text-white font-medium truncate">
                                             {txn.type === 'received' ? `From: ${txn.senderName}` : `To: ${txn.receiverName}`}
                                         </p>
                                         <p className="text-gray-600 text-xs md:hidden mt-1">{txn.id}</p>
@@ -357,12 +252,9 @@ export default function Transaction() {
                                     </div>
                                 </div>
 
-                                {/* Category */}
+                                {/* Currency */}
                                 <div className="col-span-1 md:col-span-2 flex items-center">
-                                    <div className="flex items-center gap-2 text-gray-400">
-                                        {getCategoryIcon(txn.category)}
-                                        <span className="text-sm">{txn.category}</span>
-                                    </div>
+                                    <span className="text-amber-400 text-sm">{txn.currency}</span>
                                 </div>
 
                                 {/* Status */}
@@ -391,15 +283,10 @@ export default function Transaction() {
                 <p className="text-gray-500 text-sm">
                     Showing {filteredTransactions.length} of {transactions.length} transactions
                 </p>
-                <div className="flex gap-2">
-                    <button className="px-4 py-2 bg-[#1a1a1a] border border-amber-900/20 rounded-lg text-gray-400 hover:text-white hover:border-amber-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                        Previous
-                    </button>
-                    <button className="px-4 py-2 bg-[#1a1a1a] border border-amber-900/20 rounded-lg text-gray-400 hover:text-white hover:border-amber-500/50 transition-all duration-200">
-                        Next
-                    </button>
-                </div>
             </div>
+
+            {/* Outlet for nested routes like CreateTransaction modal */}
+            <Outlet />
         </div>
     );
 }

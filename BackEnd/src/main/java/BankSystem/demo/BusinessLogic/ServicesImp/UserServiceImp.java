@@ -34,6 +34,7 @@ public class UserServiceImp implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final CurrentUserProvider currentUserProvider;
+    private final WalletServiceImp walletService;
 
     private User convertRequestToUser(UserRequestDTO dto, Role role) {
         Set<Role> roles = new HashSet<>();
@@ -49,14 +50,6 @@ public class UserServiceImp implements UserService {
                 .build();
     }
 
-    private WalletResponseDTO convertWalletToResponse(Wallet wallet) {
-        return WalletResponseDTO.builder()
-                .id(wallet.getId())
-                .balance(wallet.getBalance())
-                .currency(wallet.getWalletCurrency())
-                .createdAt(wallet.getCreatedAt())
-                .build();
-    }
 
     private UserResponseDTO ConvertUserToResponse(User user) {
         
@@ -68,7 +61,11 @@ public class UserServiceImp implements UserService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .createdAt(user.getCreatedAt())
-                .wallets(user.getWallets().stream().map(this::convertWalletToResponse).collect(java.util.stream.Collectors.toList()))
+                .wallets(user.getWallets()
+                        .stream()
+                        .map(walletService::convertWalletToResponseDTO)
+                        .toList()
+                )
                 .roles(user.getRoles().stream().map(Role::getName).collect(java.util.stream.Collectors.toSet()))
                 .build();
     }

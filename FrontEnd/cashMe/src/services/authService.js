@@ -1,10 +1,22 @@
 import { API_BASE_URL, getHeaders } from "./config";
+import { useAuth } from "./AuthProvider";
 
 // ============================================
 // AUTH TOKEN MANAGEMENT
 // ============================================
 
 const TOKEN_KEY = "authToken";
+
+/**
+ * Check if user has admin role
+ * @param {Object} user - User object with roles property
+ * @returns {boolean}
+ */
+ 
+export const isAdmin = (user) => {
+  if (!user || !user.roles) return false;
+  return user.roles.includes("Admin");
+}
 
 export const getStoredToken = () => localStorage.getItem(TOKEN_KEY);
 
@@ -13,6 +25,7 @@ export const setStoredToken = (token) => localStorage.setItem(TOKEN_KEY, token);
 export const removeStoredToken = () => localStorage.removeItem(TOKEN_KEY);
 
 export const isAuthenticated = () => !!getStoredToken();
+
 
 // ============================================
 // API CALLS
@@ -87,6 +100,7 @@ export const fetchProfile = async () => {
   if (!response.ok) {
     throw new Error("Failed to fetch user info");
   }
+
 
   return await response.json();
 };

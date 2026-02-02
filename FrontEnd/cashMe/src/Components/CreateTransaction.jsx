@@ -1,0 +1,123 @@
+import { useState } from "react";
+import Modal from "./Modal";
+import { useNavigate } from "react-router-dom";
+
+export default function CreateTransaction() {
+    const navigate = useNavigate();
+    const [error,setError] = useState(''); 
+    const [submit,setSubmit] = useState(false);
+
+    function handleClose() {
+        navigate('../');
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+       
+      
+    }
+
+    
+
+    return (
+        <Modal open={true} onClose={handleClose}>
+            {/* Header */}
+            <div className="p-6 border-b border-amber-900/20">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-linear-to-br from-amber-500 to-yellow-600 rounded-lg flex items-center justify-center">
+                            <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-white">New Transfer</h2>
+                            <p className="text-gray-400 text-sm">Send money to another wallet</p>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={handleClose}
+                        className="w-8 h-8 rounded-lg bg-[#242424] hover:bg-[#2a2a2a] flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            {/* Form */}
+            <form  className="p-6 space-y-5">
+                {/* Receiver Wallet */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Receiver Username
+                    </label>
+                    <input
+                        type="text"
+                        name="receiverUsername"
+                        placeholder="Enter receiver username"
+                        className="w-full bg-[#242424] border border-amber-900/20 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+                        required
+                    />
+                </div>
+
+                {/* Amount */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Amount
+                    </label>
+                    <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-500 font-semibold">$</span>
+                        <input
+                            type="number"
+                            name="amount"
+                            placeholder="0.00"
+                            min="0.01"
+                            step="0.01"
+                            className="w-full bg-[#242424] border border-amber-900/20 rounded-lg pl-8 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+                            required
+                        />
+                    </div>
+                </div>
+
+                {/* Currency */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Currency
+                    </label>
+                    <select
+                        name="currency"
+                        className="w-full bg-[#242424] border border-amber-900/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/50 transition-colors cursor-pointer"
+                    >
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="JPY">JPY</option>
+                        <option value="AUD">AUD</option>
+                        <option value="CAD">CAD</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+              
+                {/* Buttons */}
+                <div className="flex gap-3 pt-4">
+                    <button
+                        type="button"
+                        onClick={handleClose}
+                        className="flex-1 px-4 py-3 bg-[#242424] border border-amber-900/20 text-gray-300 font-medium rounded-lg hover:bg-[#2a2a2a] hover:text-white transition-all duration-200"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="flex-1 px-4 py-3 bg-linear-to-r from-amber-600 via-yellow-500 to-amber-600 text-black font-semibold rounded-lg hover:from-amber-500 hover:via-yellow-400 hover:to-amber-500 transition-all duration-200 shadow-lg shadow-amber-500/20"
+                    >
+                        Send Money
+                    </button>
+                </div>
+            </form>
+        </Modal>
+    );
+}

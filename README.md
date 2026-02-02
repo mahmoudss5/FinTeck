@@ -16,16 +16,17 @@ A full-stack banking application built with Spring Boot and React, providing dig
 
 ### Backend
 
-| Technology        | Version | Purpose                          |
-| ----------------- | ------- | -------------------------------- |
-| Java              | 21      | Programming Language             |
-| Spring Boot       | 3.4.1   | Application Framework            |
-| Spring Security   | -       | Authentication & Authorization   |
-| Spring Data JPA   | -       | Data Persistence                 |
-| MySQL             | 8.x     | Database                         |
-| Flyway            | -       | Database Migrations              |
-| Lombok            | -       | Code Generation                  |
-| SpringDoc OpenAPI | 2.7.0   | API Documentation                |
+| Technology        | Version | Purpose                                                     |
+| ----------------- | ------- | ----------------------------------------------------------- |
+| Java              | 21      | Programming Language                                        |
+| Spring Boot       | 3.4.1   | Application Framework                                       |
+| Spring Security   | -       | Authentication & Authorization                              |
+| Spring Data JPA   | -       | Data Persistence                                            |
+| Spring AOP        | -       | Aspect-Oriented Programming (Logging, Validation, Security) |
+| MySQL             | 8.x     | Database                                                    |
+| Flyway            | -       | Database Migrations                                         |
+| Lombok            | -       | Code Generation                                             |
+| SpringDoc OpenAPI | 2.7.0   | API Documentation                                           |
 
 ### Frontend
 
@@ -88,12 +89,14 @@ finTech/
 ### Backend Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd finTech
    ```
 
 2. **Create MySQL database**
+
    ```sql
    CREATE DATABASE azbanking;
    ```
@@ -101,6 +104,7 @@ finTech/
 3. **Configure database credentials**
 
    Edit `BackEnd/src/main/resources/application.properties`:
+
    ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/azbanking
    spring.datasource.username=your_username
@@ -109,10 +113,12 @@ finTech/
    ```
 
 4. **Run the application**
+
    ```bash
    cd BackEnd
    ./mvnw spring-boot:run
    ```
+
    Backend starts at `http://localhost:8080`
 
 5. **Access Swagger UI**
@@ -122,6 +128,7 @@ finTech/
 ### Frontend Setup
 
 1. **Install dependencies**
+
    ```bash
    cd FrontEnd/cashMe
    npm install
@@ -144,24 +151,24 @@ finTech/
 
 ### Users (`/user/api`)
 
-| Method | Endpoint          | Description     |
-| ------ | ----------------- | --------------- |
+| Method | Endpoint          | Description              |
+| ------ | ----------------- | ------------------------ |
 | GET    | `/me`             | Get current user profile |
-| GET    | `/{userId}`       | Get user by ID  |
-| GET    | `/all`            | Get all users   |
-| POST   | `/updatePassword` | Update password |
-| DELETE | `/{userId}`       | Delete user     |
+| GET    | `/{userId}`       | Get user by ID           |
+| GET    | `/all`            | Get all users            |
+| POST   | `/updatePassword` | Update password          |
+| DELETE | `/{userId}`       | Delete user              |
 
 ### Wallets (`/wallets/api`)
 
-| Method | Endpoint                 | Description        |
-| ------ | ------------------------ | ------------------ |
-| POST   | `/create`                | Create wallet      |
-| GET    | `/{walletId}`            | Get wallet by ID   |
-| GET    | `/all`                   | Get all wallets    |
-| PUT    | `/deactivate/{walletId}` | Deactivate wallet  |
-| DELETE | `/delete/{walletId}`     | Delete wallet      |
-| PUT    | `/transfer`              | Transfer funds     |
+| Method | Endpoint                 | Description       |
+| ------ | ------------------------ | ----------------- |
+| POST   | `/create`                | Create wallet     |
+| GET    | `/{walletId}`            | Get wallet by ID  |
+| GET    | `/all`                   | Get all wallets   |
+| PUT    | `/deactivate/{walletId}` | Deactivate wallet |
+| DELETE | `/delete/{walletId}`     | Delete wallet     |
+| PUT    | `/transfer`              | Transfer funds    |
 
 ### Transactions (`/transactions/api`)
 
@@ -186,14 +193,14 @@ finTech/
 
 ### Support Tickets (`/support-tickets/api`)
 
-| Method | Endpoint               | Description     |
-| ------ | ---------------------- | --------------- |
-| POST   | `/`                    | Create ticket   |
-| GET    | `/{ticketId}`          | Get by ID       |
-| GET    | `/user/{userId}`       | Get by user     |
-| GET    | `/status/{status}`     | Get by status   |
-| PATCH  | `/{ticketId}/status`   | Update status   |
-| DELETE | `/{ticketId}`          | Delete ticket   |
+| Method | Endpoint             | Description   |
+| ------ | -------------------- | ------------- |
+| POST   | `/`                  | Create ticket |
+| GET    | `/{ticketId}`        | Get by ID     |
+| GET    | `/user/{userId}`     | Get by user   |
+| GET    | `/status/{status}`   | Get by status |
+| PATCH  | `/{ticketId}/status` | Update status |
+| DELETE | `/{ticketId}`        | Delete ticket |
 
 ## 🗄 Database Schema
 
@@ -211,13 +218,13 @@ finTech/
 
 ### Migrations (Flyway)
 
-| Migration | Description |
-| --------- | ----------- |
+| Migration | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
 | V1        | Initial schema (users, roles, wallets, transactions, audit_logs) |
-| V2        | Add version column for optimistic locking |
-| V3        | Add support ticket system |
-| V4        | Add ticket response table |
-| V5        | Add loan applications table |
+| V2        | Add version column for optimistic locking                        |
+| V3        | Add support ticket system                                        |
+| V4        | Add ticket response table                                        |
+| V5        | Add loan applications table                                      |
 
 ## 🔒 Security
 
@@ -229,10 +236,12 @@ finTech/
 - **Protected Routes**: Frontend route guards for authenticated pages
 
 ### Public Endpoints
+
 - `/api/v1/auth/**` - Authentication
 - `/swagger-ui/**` - API Documentation
 
 ### Protected Endpoints
+
 All other endpoints require JWT token in Authorization header.
 
 ## 🎨 Frontend Features

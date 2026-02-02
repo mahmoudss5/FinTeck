@@ -34,7 +34,7 @@ public class WalletServiceImp implements WalletService {
     private final TransactionService transactionService;
     private final CurrentUserProvider currentUserProvider;
 
-    private WalletResponseDTO convertWalletToResponseDTO(Wallet wallet) {
+    public WalletResponseDTO convertWalletToResponseDTO(Wallet wallet) {
         return WalletResponseDTO.builder()
                 .id(wallet.getId())
                 .userId(wallet.getUser().getId())
@@ -48,7 +48,6 @@ public class WalletServiceImp implements WalletService {
 
     @Override
     @AuditLog
-    @OnlyForSameUser
     public WalletResponseDTO createWallet(WalletRequestDTO walletRequestDTO) {
         Long currentUserId = currentUserProvider.getCurrentUserId();
         if (currentUserId == null) {

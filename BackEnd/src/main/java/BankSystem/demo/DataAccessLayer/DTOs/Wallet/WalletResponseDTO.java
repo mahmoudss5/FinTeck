@@ -22,4 +22,5 @@ public class WalletResponseDTO {
     private BigDecimal balance;
     private Boolean active;
     private LocalDateTime createdAt;
+
 }

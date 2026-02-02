@@ -1,8 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
+
 import {
     login as loginApi,
     logout as logoutApi,
-    fetchProfile as fetchProfileApi
+    fetchProfile as fetchProfileApi,
+    isAdmin as isAdminApi,
+    register as registerApi
 } from "./authService";
 
 const AuthContext = createContext(null);
@@ -10,7 +13,7 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const [isAdmin, setIsAdmin] = useState(false);
     useEffect(() => {
         checkUserLoggedIn();
     }, []);
@@ -21,6 +24,7 @@ export const AuthProvider = ({ children }) => {
             try {
                 const userData = await fetchProfileApi();
                 setUser(userData);
+                setIsAdmin(isAdminApi(userData));
             } catch (error) {
                 console.error("Session expired", error);
                 logoutApi();
@@ -34,6 +38,7 @@ export const AuthProvider = ({ children }) => {
         const result = await loginApi(email, password);
         const userData = await fetchProfileApi();
         setUser(userData);
+        setIsAdmin(isAdminApi(userData));
         return result;
     };
 
@@ -42,8 +47,21 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    const Register = async (registerData) => {
+        const result = await registerApi(registerData);
+        const userData = await fetchProfileApi();
+        setUser(userData);
+        setIsAdmin(isAdminApi(userData));
+        return result;
+    };
+
+    function setUserData(userData) {
+        setUser(userData);
+        setIsAdmin(isAdminApi(userData));
+    }
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user,setUserData, login, logout, loading, isAdmin,Register}}>
             {!loading && children}
         </AuthContext.Provider>
     );
