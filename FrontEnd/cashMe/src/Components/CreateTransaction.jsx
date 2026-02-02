@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
-
+import { transferMoney } from "../services/WalletService";
 export default function CreateTransaction() {
     const navigate = useNavigate();
     const [error,setError] = useState(''); 
@@ -11,10 +11,31 @@ export default function CreateTransaction() {
         navigate('../');
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-       
-      
+        setSubmit(true);
+        const formData = new FormData(e.target);
+        const receiverUsername = formData.get('receiverUsername');
+        const amount = Number(formData.get('amount'));
+        const currency = formData.get('currency');
+        const senderWalletId = Number(formData.get('senderWalletId'));
+        const data={
+            senderWalletId,
+            receiverUsername,
+            amount,
+            currency
+        }
+        try {
+            const response = await transferMoney(data);
+            console.log(response);
+            navigate('../');
+        } catch (error) {
+            console.log(error);
+            setError(error.message);
+            setSubmit(false);
+        }finally{
+            setSubmit(false);
+        }
     }
 
     
@@ -47,7 +68,19 @@ export default function CreateTransaction() {
             </div>
 
             {/* Form */}
-            <form  className="p-6 space-y-5">
+            <form onSubmit={handleSubmit}  className="p-6 space-y-5">
+                 <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Sender wallet id
+                    </label>
+                    <input
+                        type="text"
+                        name="senderWalletId"
+                        placeholder="Enter sender wallet id"
+                        className="w-full bg-[#242424] border border-amber-900/20 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+                        required
+                    />
+                </div>
                 {/* Receiver Wallet */}
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -61,6 +94,7 @@ export default function CreateTransaction() {
                         required
                     />
                 </div>
+
 
                 {/* Amount */}
                 <div>
@@ -99,6 +133,11 @@ export default function CreateTransaction() {
                         <option value="Other">Other</option>
                     </select>
                 </div>
+                {error && (
+                    <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
+                        <p className="text-red-400 text-sm">{error}</p>
+                    </div>
+                )}
 
               
                 {/* Buttons */}
