@@ -15,13 +15,13 @@ export default function CreateTransaction() {
         e.preventDefault();
         setSubmit(true);
         const formData = new FormData(e.target);
-        const receiverUsername = formData.get('receiverUsername');
+        const receiverUserName = formData.get('receiverUsername');
         const amount = Number(formData.get('amount'));
         const currency = formData.get('currency');
         const senderWalletId = Number(formData.get('senderWalletId'));
         const data={
             senderWalletId,
-            receiverUsername,
+            receiverUserName,
             amount,
             currency
         }
@@ -126,7 +126,7 @@ export default function CreateTransaction() {
                     >
                         <option value="USD">USD</option>
                         <option value="EUR">EUR</option>
-                        <option value="GBP">GBP</option>
+                        <option value="EGP">EGP</option>
                         <option value="JPY">JPY</option>
                         <option value="AUD">AUD</option>
                         <option value="CAD">CAD</option>

@@ -14,14 +14,16 @@ export default function WalletDetails() {
     };
 
     const handleDeactivateWallet = async () => {
+        
         if (!confirm('Are you sure you want to deactivate this wallet? This action cannot be undone.')) {
             return;
         }
-
+        
+        const id=Number(wallet.id)
         setDeactivating(true);
         setError(null);
         try {
-            await deactivateWallet(wallet.id);
+            await deactivateWallet(id);
             // Revalidate to reload all loader data
             revalidator.revalidate();
             navigate('../wallets');

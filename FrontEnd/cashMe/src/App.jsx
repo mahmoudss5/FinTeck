@@ -13,10 +13,10 @@ import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import Login from "./Pages/Login.jsx";
 import ComingSoon from "./Pages/ComingSoon.jsx";
 import AdminDashboard from "./Pages/AdminDashboard.jsx";
-import { getAllWallets } from "./services/WalletService.js";
 import LoadingSpinner from "./Components/LoadingSpinner.jsx";
 import CreateTransaction from "./Components/CreateTransaction.jsx";
 import { getWalletById } from "./services/WalletService.js";
+import { getAllWalletsforCurrentUser } from "./services/WalletService.js";
 
 function App() {
   const router = createBrowserRouter([
@@ -65,7 +65,7 @@ function App() {
         {
           path: 'wallets',
           element: <ProtectedRoute><Wallets /></ProtectedRoute>,
-          loader: getAllWallets
+          loader: getAllWalletsforCurrentUser
         },
         {
           path: 'wallets/:id',

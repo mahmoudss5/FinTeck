@@ -2,10 +2,10 @@ import { API_BASE_URL, getHeaders } from "./config";
 import { getWalletTransactions } from "./TransactionService";
 
 
-// to do make a loader function  to fetch all wallets and pass it to the wallets page
-// and avoid using the wallets that returned to the user 
+
 export const deactivateWallet = async (walletId) => {
-   const response = await fetch(`${API_BASE_URL}/wallets/api/deactive/${walletId}`, {
+   console.log('recived wallet id from deactivate wallet service '+walletId)
+   const response = await fetch(`${API_BASE_URL}/wallets/api/deactivate/${walletId}`, {
       method: "PUT",
       headers: getHeaders(),
    });
@@ -20,9 +20,9 @@ export const deactivateWallet = async (walletId) => {
 }
 
 export const transferMoney = async (data) => {
-   console.log('recived data from transfer money service '+data.senderWalletId+' '+data.receiverUsername+' '+data.amount+' '+data.currency)
+   console.log('recived data from transfer money service '+data.senderWalletId+' '+data.receiverUserName+' '+data.amount+' '+data.currency)
    const response =await fetch(`${API_BASE_URL}/wallets/api/transfer`,{
-    method:"POST",
+    method:"PUT",
     headers:getHeaders(),
     body:JSON.stringify(data)
    })     
@@ -56,8 +56,8 @@ export const createWallet = async (data) => {
 }
 
 
-export const getAllWallets = async () => {
-   const response =await fetch(`${API_BASE_URL}/wallets/api/all`,{
+export const getAllWalletsforCurrentUser = async () => {
+   const response =await fetch(`${API_BASE_URL}/wallets/api/my-wallets`,{
     method:"GET",
     headers:getHeaders(),
    })     
@@ -95,3 +95,4 @@ export const getWalletById = async ({params}) =>{
  return walletData
 
 }  
+

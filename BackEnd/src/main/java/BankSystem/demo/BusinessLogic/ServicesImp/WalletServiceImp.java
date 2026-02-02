@@ -154,6 +154,18 @@ public class WalletServiceImp implements WalletService {
     }
 
     @Override
+    @OnlyForSameUser
+   @AuditLog
+    public List<WalletResponseDTO> getAllWalletsForCurrentUser() {
+        Long currentUserId = currentUserProvider.getCurrentUserId();
+        if (currentUserId == null) {
+            throw new RuntimeException("User not authenticated");
+        }
+        List<Wallet> wallets = walletRepository.findByUserId(currentUserId);
+        return wallets.stream().map(this::convertWalletToResponseDTO).toList();
+    }
+
+    @Override
     public WalletResponseDTO deactivateWallet(Long id) {
         Wallet wallet = walletRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Wallet not found"));
@@ -176,6 +188,22 @@ public class WalletServiceImp implements WalletService {
         Wallet wallet = walletRepository.findById(id).orElseThrow(() -> new RuntimeException("Wallet not found"));
         walletRepository.delete(wallet);
         return convertWalletToResponseDTO(wallet);
+    }
+
+    @Override
+    @RequiresAdmin
+    @AuditLog
+    public List<WalletResponseDTO> getAllWalletsByUserId(Long userId) {
+        if (userId == null) {
+            throw new RuntimeException("User ID cannot be null");
+        }
+        List<Wallet> wallets = walletRepository.findByUserId(userId);
+        if (wallets.isEmpty()) {
+            throw new RuntimeException("No wallets found for user ID: " + userId);
+        }
+        return wallets.stream()
+                .map(this::convertWalletToResponseDTO)
+                .toList();
     }
 
     @Override

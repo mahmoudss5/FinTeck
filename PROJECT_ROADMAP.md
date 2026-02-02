@@ -7,9 +7,9 @@ What still needs to be implemented in the project.
 ## 🔴 Not Started
 
 ### Backend :
-1-Use web sockets for real time notifications and realtime chat between users
-2-Use redis for caching and message queue
-3-...... 
+### 1-Use web sockets for real time notifications and realtime chat between users
+### 2-Use redis for caching and message queue
+### 
 
 
 ### Frontend Pages
@@ -75,7 +75,7 @@ What still needs to be implemented in the project.
 - [Completed] View all wallets
 - [Completed] Create wallet
 - [Completed] Wallet details page
-- [x] Deactivate wallet
+- [Completed] Deactivate wallet
 - [Completed] View wallet transactions
 
 ### Transactions
@@ -83,7 +83,7 @@ What still needs to be implemented in the project.
 - [Completed] View all transactions
 - [Completed] Filter by type (sent/received)
 - [x] Search transactions
-- [x] Create new transfer
+- [Completed] Create new transfer
 
 ### Loans
 

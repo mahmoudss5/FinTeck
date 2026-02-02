@@ -41,7 +41,7 @@ public class LoanApplicationController {
 
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get All Loan Applications", description = "Retrieve all loan applications")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<LoanApplicationResponseDTO>> getAllLoanApplications() {
         List<LoanApplicationResponseDTO> response = loanApplicationService.getAllLoanApplications();
         return ResponseEntity.ok(response);

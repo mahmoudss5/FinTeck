@@ -15,5 +15,5 @@ public interface WalletRepository extends JpaRepository<Wallet, Long> {
     Wallet findByWalletCurrencyAndUserUserName(WalletCurrency currency, String username);
     List<Wallet> findByWalletCurrency(WalletCurrency currency);
     Boolean existsByUserIdAndWalletCurrency(Long userId, WalletCurrency currency);
-
+    List<Wallet> findByUserId(Long userId);
 }

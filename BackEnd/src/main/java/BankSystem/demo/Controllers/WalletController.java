@@ -70,4 +70,19 @@ public class WalletController {
     return ResponseEntity.ok(response);
   }
 
+  @Operation(summary = "Get all wallets for current user", description = "Retrieve all wallets for the authenticated user")
+  @ResponseStatus(org.springframework.http.HttpStatus.OK)
+  @GetMapping("/my-wallets")
+  public ResponseEntity<List<WalletResponseDTO>> getWalletsForCurrentUser() {
+      List<WalletResponseDTO> response = walletService.getAllWalletsForCurrentUser();
+      return ResponseEntity.ok(response);
+  }
+
+  @Operation(summary = "Get all wallets by User ID", description = "Retrieve all wallets for a specific user by their ID")
+  @ResponseStatus(org.springframework.http.HttpStatus.OK)
+  @GetMapping("/user/{userId}/wallets")
+  public ResponseEntity<List<WalletResponseDTO>> getAllWalletsByUserId(@PathVariable Long userId) {
+      List<WalletResponseDTO> response = walletService.getAllWalletsByUserId(userId);
+      return ResponseEntity.ok(response);
+  }
 }
