@@ -180,6 +180,25 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @AuditLog
+    public UserResponseDTO demoteFromAdmin(Long id) {
+      User user = userRepositorie.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+      if (!needOwner(user)) {
+            throw new RuntimeException("Only Owner can demote Admin users");
+      }
+
+      Role adminRole = roleRepository.findByName(RoleType.Admin.name());
+      if (adminRole != null) {
+          user.getRoles().remove(adminRole);
+      }
+
+        userRepositorie.save(user);
+        return ConvertUserToResponse(user);
+    }
+
+    @Override
     public UserResponseDTO getUserDetails() {
         Long currentUserId = currentUserProvider.getCurrentUserId();
         if (currentUserId == null) {
@@ -190,12 +209,29 @@ public class UserServiceImp implements UserService {
         return ConvertUserToResponse(user);
     }
 
+
+    private Boolean needOwner(User user) {
+        Long currentUserId= currentUserProvider.getCurrentUserId();
+        User currentUser = userRepositorie.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("Current user not found"));
+
+        if (user.getRoles().contains(RoleType.Admin.name()) && !currentUser.getRoles().contains(RoleType.Owner.name()) ) {
+            return false;
+        }
+        return true;
+    }
+
+
     @Override
     @RequiresAdmin
     @AuditLog
     public UserResponseDTO deleteUser(Long id) {
         User user = userRepositorie.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+       if (user.getRoles().contains(RoleType.Admin.name()) && !needOwner(user)) {
+              throw new RuntimeException("Only Owner can delete Admin users");
+       }
         userRepositorie.delete(user);
         return ConvertUserToResponse(user);
     }

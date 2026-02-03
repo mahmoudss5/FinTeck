@@ -66,4 +66,13 @@ public class UserController {
         UserResponseDTO response = userService.getUserDetails();
         return ResponseEntity.ok(response);
     }
+
+
+    @ResponseStatus(org.springframework.http.HttpStatus.OK)
+    @Operation(summary = "Demote Admin to User", description = "Demote an admin to regular user by user ID")
+    @PutMapping("/demote/{userId}")
+    public ResponseEntity<UserResponseDTO> demoteFromAdmin(@PathVariable Long userId) {
+        UserResponseDTO response = userService.demoteFromAdmin(userId);
+        return ResponseEntity.ok(response);
+    }
 }

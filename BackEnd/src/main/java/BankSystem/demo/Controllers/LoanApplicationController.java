@@ -1,5 +1,4 @@
 package BankSystem.demo.Controllers;
-
 import BankSystem.demo.BusinessLogic.Services.LoanApplicationService;
 import BankSystem.demo.DataAccessLayer.DTOs.LoanApplication.LoanApplicationRequestDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.LoanApplication.LoanApplicationResponseDTO;

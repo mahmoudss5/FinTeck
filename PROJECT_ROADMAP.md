@@ -1,3 +1,4 @@
+
 # AzBank FinTech - Project Roadmap
 
 What still needs to be implemented in the project.
@@ -9,7 +10,7 @@ What still needs to be implemented in the project.
 ### Backend :
 ### 1-Use web sockets for real time notifications and realtime chat between users
 ### 2-Use redis for caching and message queue
-### 
+### 3- Add owner role to the users and make him able to create wallets and transactions and loans and and delete users or admin and deactive wallets and deprveleged users or admins also  
 
 
 ### Frontend Pages

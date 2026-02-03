@@ -23,6 +23,7 @@ public interface UserService {
     UserResponseDTO getUserById(Long id);
 
     UserResponseDTO promoteToAdmin(Long id);
+    UserResponseDTO demoteFromAdmin(Long id);
     UserResponseDTO getUserDetails();
     Boolean isAdmin(Long userId);
 }

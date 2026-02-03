@@ -131,3 +131,14 @@ export const promoteUserToAdmin = async (userId) => {
     }
     return await response.json();
 };
+
+export const demoteAdmin = async (userId) => {
+    const response = await fetch(`${API_BASE_URL}/user/api/demote/${userId}`, {
+        method: "PUT",
+        headers: getHeaders(),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to demote admin");
+    }
+    return await response.json();
+};
