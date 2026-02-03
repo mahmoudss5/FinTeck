@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getAllUsers, deleteUser, getAllWallets, getAllLoans, promoteUserToAdmin, demoteAdmin } from '../services/AdminService';
+import { getAllUsers, deleteUser, getAllWallets, getAllLoans, promoteUserToAdmin, demoteAdmin, updateWalletStatus } from '../services/AdminService';
 import { useAuth } from '../services/AuthProvider';
+import UsersTable from '../Components/Admin/UsersTable';
+import WalletsTable from '../Components/Admin/WalletsTable';
+import LoansTable from '../Components/Admin/LoansTable';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
@@ -58,6 +61,7 @@ export default function AdminDashboard() {
             month: 'short', day: 'numeric', year: 'numeric'
         });
     };
+
     const handlePromoteUserToAdmin = async (userId) => {
         if (!confirm('Are you sure you want to promote this user to admin?')) {
             return;
@@ -65,7 +69,7 @@ export default function AdminDashboard() {
         try {
             setActionLoading(userId);
             await promoteUserToAdmin(userId);
-            await fetchAllData(); // Reload data from server
+            await fetchAllData();
         } catch (err) {
             alert('Failed to promote user: ' + err.message);
         } finally {
@@ -80,7 +84,7 @@ export default function AdminDashboard() {
         try {
             setActionLoading(userId);
             await demoteAdmin(userId);
-            await fetchAllData(); // Reload data from server
+            await fetchAllData();
         } catch (err) {
             alert('Failed to demote admin: ' + err.message);
         } finally {
@@ -88,21 +92,20 @@ export default function AdminDashboard() {
         }
     };
      
-    const handleDeactiveWallet = async (walletId) => {
-        if (!confirm('Are you sure you want to deactive this wallet? This action cannot be undone.')) {
+    const handleDeactivateWallet = async (walletId) => {
+        if (!confirm('Are you sure you want to deactivate this wallet? This action cannot be undone.')) {
             return;
         }
         try {
             setActionLoading(walletId);
             await updateWalletStatus(walletId, 'INACTIVE');
-            setWallets(wallets.map(w => w.id === walletId ? { ...w, status: 'INACTIVE' } : w));
+            setWallets(wallets.map(w => w.id === walletId ? { ...w, active: false } : w));
         } catch (err) {
-            alert('Failed to deactive wallet: ' + err.message);
+            alert('Failed to deactivate wallet: ' + err.message);
         } finally {
             setActionLoading(null);
         }
     };
-
 
     // Stats calculations
     const totalBalance = wallets.reduce((sum, w) => sum + parseFloat(w.balance || 0), 0);
@@ -225,204 +228,33 @@ export default function AdminDashboard() {
 
             {/* Users Table */}
             {activeTab === 'users' && (
-                <div className="bg-[#1a1a1a] border border-red-900/20 rounded-xl overflow-hidden">
-                    <div className="p-6 border-b border-red-900/20">
-                        <h2 className="text-lg font-semibold text-white">All Users ({users.length})</h2>
-                    </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-[#242424]">
-                                <tr className="text-left text-gray-400 text-sm">
-                                    <th className="px-6 py-4">ID</th>
-                                    <th className="px-6 py-4">Username</th>
-                                    <th className="px-6 py-4">Email</th>
-                                    <th className="px-6 py-4">Wallets</th>
-                                    <th className="px-6 py-4">Roles</th>
-                                    <th className="px-6 py-4">Created</th>
-                                    <th className="px-6 py-4">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-red-900/10">
-                                {users.map((user) => {
-                                    const isUserOwner = user.roles?.some(r => r.toLowerCase().includes('owner'));
-                                    const isUserAdmin = user.roles?.some(r => r.toLowerCase().includes('admin'));
-                                    return (
-                                    <tr key={user.id} className={`hover:bg-[#242424] transition-colors ${
-                                        isUserOwner 
-                                            ? 'bg-gradient-to-r from-amber-500/10 to-transparent border-l-4 border-l-amber-400' 
-                                            : isUserAdmin 
-                                                ? 'bg-gradient-to-r from-purple-500/10 to-transparent border-l-4 border-l-purple-400' 
-                                                : ''
-                                    }`}>
-                                        <td className="px-6 py-4 text-gray-400">#{user.id}</td>
-                                        <td className="px-6 py-4 text-white font-medium">{user.userName}</td>
-                                        <td className="px-6 py-4 text-gray-400">{user.email}</td>
-                                        <td className="px-6 py-4 text-amber-400">{user.wallets?.length || 0}</td>
-                                        <td className="px-6 py-4">
-                                            {user.roles?.map((role, i) => {
-                                                const roleLower = role.toLowerCase();
-                                                let colorClass = 'bg-blue-500/10 text-blue-400 border border-blue-500/20'; // Default: User
-                                                if (roleLower.includes('owner')) {
-                                                    colorClass = 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
-                                                } else if (roleLower.includes('admin')) {
-                                                    colorClass = 'bg-purple-500/10 text-purple-400 border border-purple-500/20';
-                                                }
-                                                return (
-                                                    <span key={i} className={`px-2 py-1 rounded text-xs font-medium mr-1 ${colorClass}`}>
-                                                        {role.replace('ROLE_', '')}
-                                                    </span>
-                                                );
-                                            })}
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-400">{formatDate(user.createdAt)}</td>
-                                        <td className="px-6 py-4">
-                                           
-                                            <button
-                                                onClick={() => handleDeleteUser(user.id)}
-                                                disabled={actionLoading === user.id || isUserOwner || (!isOwner && isUserAdmin)}
-                                                className={`px-3 py-1 rounded text-sm transition-colors ${
-                                                    isUserOwner || (!isOwner && isUserAdmin)
-                                                        ? 'bg-gray-500/10 border border-gray-500/20 text-gray-500 cursor-not-allowed'
-                                                        : 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 disabled:opacity-50'
-                                                }`}
-                                            >
-                                                {actionLoading === user.id ? '...' : 'Delete'}
-                                            </button>
-
-                                            {isUserAdmin ? (
-                                                <button
-                                                    onClick={() => handleDemoteAdmin(user.id)}
-                                                    disabled={actionLoading === user.id || isUserOwner || !isOwner}
-                                                    className={`ml-2 px-3 py-1 rounded text-sm transition-colors ${
-                                                        isUserOwner || !isOwner
-                                                            ? 'bg-gray-500/10 border border-gray-500/20 text-gray-500 cursor-not-allowed'
-                                                            : 'bg-orange-500/10 border border-orange-500/20 text-orange-400 hover:bg-orange-500/20 disabled:opacity-50'
-                                                    }`}
-                                                >
-                                                    {actionLoading === user.id ? '...' : 'Depromote'}
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    onClick={() => handlePromoteUserToAdmin(user.id)}
-                                                    disabled={actionLoading === user.id || isUserOwner}
-                                                    className={`ml-2 px-3 py-1 rounded text-sm transition-colors ${
-                                                        isUserOwner
-                                                            ? 'bg-gray-500/10 border border-gray-500/20 text-gray-500 cursor-not-allowed'
-                                                            : 'bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20 disabled:opacity-50'
-                                                    }`}
-                                                >
-                                                    {actionLoading === user.id ? '...' : 'Promote'}
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <UsersTable
+                    users={users}
+                    isOwner={isOwner}
+                    actionLoading={actionLoading}
+                    onDelete={handleDeleteUser}
+                    onPromote={handlePromoteUserToAdmin}
+                    onDemote={handleDemoteAdmin}
+                    formatDate={formatDate}
+                />
             )}
 
             {/* Wallets Table */}
             {activeTab === 'wallets' && (
-                <div className="bg-[#1a1a1a] border border-red-900/20 rounded-xl overflow-hidden">
-                    <div className="p-6 border-b border-red-900/20">
-                        <h2 className="text-lg font-semibold text-white">All Wallets ({wallets.length})</h2>
-                    </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-[#242424]">
-                                <tr className="text-left text-gray-400 text-sm">
-                                    <th className="px-6 py-4">ID</th>
-                                    <th className="px-6 py-4">Currency</th>
-                                    <th className="px-6 py-4">Balance</th>
-                                    <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4">Created</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-red-900/10">
-                                {wallets.map((wallet) => (
-                                    <tr key={wallet.id} className="hover:bg-[#242424] transition-colors">
-                                        <td className="px-6 py-4 text-gray-400">#{wallet.id}</td>
-                                        <td className="px-6 py-4">
-                                            <span className="px-2 py-1 bg-amber-500/10 text-amber-400 rounded font-medium">
-                                                {wallet.currency}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-white font-semibold">
-                                            ${parseFloat(wallet.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                wallet.active 
-                                                    ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                                                    : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                                            }`}>
-                                                <button className='cursor-pointer hover:text-white transition-colors'
-                                                onClick={() => handleDeactiveWallet(wallet.id)}>
-                                                    {wallet.active ? 'Active' : 'Inactive'}
-                                                </button>
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-400">{formatDate(wallet.createdAt)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <WalletsTable
+                    wallets={wallets}
+                    actionLoading={actionLoading}
+                    onDeactivate={handleDeactivateWallet}
+                    formatDate={formatDate}
+                />
             )}
 
             {/* Loans Table */}
             {activeTab === 'loans' && (
-                <div className="bg-[#1a1a1a] border border-red-900/20 rounded-xl overflow-hidden">
-                    <div className="p-6 border-b border-red-900/20">
-                        <h2 className="text-lg font-semibold text-white">All Loan Applications ({loans.length})</h2>
-                    </div>
-                    {loans.length === 0 ? (
-                        <div className="p-12 text-center">
-                            <p className="text-gray-400">No loan applications found</p>
-                        </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-[#242424]">
-                                    <tr className="text-left text-gray-400 text-sm">
-                                        <th className="px-6 py-4">ID</th>
-                                        <th className="px-6 py-4">Applicant</th>
-                                        <th className="px-6 py-4">Amount</th>
-                                        <th className="px-6 py-4">Purpose</th>
-                                        <th className="px-6 py-4">Status</th>
-                                        <th className="px-6 py-4">Applied</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-red-900/10">
-                                    {loans.map((loan) => (
-                                        <tr key={loan.id} className="hover:bg-[#242424] transition-colors">
-                                            <td className="px-6 py-4 text-gray-400">#{loan.id}</td>
-                                            <td className="px-6 py-4 text-white">{loan.fullName}</td>
-                                            <td className="px-6 py-4 text-amber-400 font-semibold">
-                                                ${parseFloat(loan.requestedAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                                            </td>
-                                            <td className="px-6 py-4 text-gray-400">{loan.loanPurpose}</td>
-                                            <td className="px-6 py-4">
-                                                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                    loan.status === 'APPROVED' ? 'bg-green-500/10 text-green-400 border border-green-500/20' :
-                                                    loan.status === 'REJECTED' ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
-                                                    'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
-                                                }`}>
-                                                    {loan.status}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-gray-400">{formatDate(loan.appliedAt)}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </div>
+                <LoansTable
+                    loans={loans}
+                    formatDate={formatDate}
+                />
             )}
 
             {/* Overview Tab */}
