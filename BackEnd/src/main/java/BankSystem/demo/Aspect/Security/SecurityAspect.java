@@ -30,7 +30,9 @@ public class SecurityAspect {
             throw new RuntimeException("User not found");
         }
         if (!userService.isAdmin(Userid)) {
+            log.error("Access denied: User {} is not an admin", Userid);
             throw new RuntimeException("User is not an admin");
+
         }
 
     }

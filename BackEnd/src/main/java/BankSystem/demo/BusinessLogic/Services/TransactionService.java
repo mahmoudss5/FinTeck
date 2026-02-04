@@ -11,5 +11,7 @@ public interface TransactionService {
     List<TransactionResponseDTO> getAllTransactions();
     String generateMonthlyReport(Long walletId, int month);
     List<TransactionResponseDTO> findTransactionsByStatus(String status);
+    List<TransactionResponseDTO> findAllTransactionsByWalletId(Long walletId);
+    List<TransactionResponseDTO> getAllTransactionsForCurrentUser();
     void recordTransaction(Wallet sender, Wallet receiver, BigDecimal amount);
 }

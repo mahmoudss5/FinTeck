@@ -1,4 +1,3 @@
-
 # AzBank FinTech - Project Roadmap
 
 What still needs to be implemented in the project.
@@ -8,32 +7,32 @@ What still needs to be implemented in the project.
 ## 🔴 Not Started
 
 ### Backend :
-### 1-Use web sockets for real time notifications and realtime chat between users
-### 2-Use redis for caching and message queue
-### 3- Add owner role to the users and make him able to create wallets and transactions and loans and and delete users or admin and deactive wallets and deprveleged users or admins also  
 
+### 1-Use web sockets for real time notifications and realtime chat between users
+
+### 2-Use redis for caching and message queue
+
+### 3- Add owner role capabilities (create permissions for others)
 
 ### Frontend Pages
 
-| Page                      | Current Status      | What's Needed                                                    |
-| ------------------------- | ------------------- | ---------------------------------------------------------------- |
-| **Admin Dashboard**       | Placeholder only    | Full admin panel with user management, loan approvals, analytics |
-| **Analytics**             | Placeholder only    | Charts, graphs, financial insights, spending trends              |
-| **Support Tickets**       | Not created         | Create/view tickets page for customer support                    |
-| **User Profile/Settings** | Not created         | Edit profile, change password, notification preferences          |
-| **Notifications**         | UI only (bell icon) | Real notification system with backend integration                |
+| Page                      | Current Status      | What's Needed                                           |
+| ------------------------- | ------------------- | ------------------------------------------------------- |
+| **Analytics**             | Placeholder only    | Charts, graphs, financial insights, spending trends     |
+| **Support Tickets**       | Not created         | Create/view tickets page for customer support           |
+| **User Profile/Settings** | Not created         | Edit profile, change password, notification preferences |
+| **Notifications**         | UI only (bell icon) | Real notification system with backend integration       |
 
 ### Frontend Features
 
-| Feature                       | Status | Details                                                    |
-| ----------------------------- | ------ | ---------------------------------------------------------- |
-| Wallet selection in transfers | ❌     | Show dropdown of user's wallets instead of manual ID input |
-| Forgot password flow          | ❌     | Password reset via email                                   |
-| Email verification            | ❌     | Verify email on registration                               |
-| Transaction details modal     | ❌     | Click on transaction to see full details                   |
-| PDF transaction reports       | ❌     | Download monthly/yearly statements                         |
-| Dark/Light theme toggle       | ❌     | Currently only dark theme                                  |
-| Mobile responsive menu        | ❌     | Hamburger menu for mobile navigation                       |
+| Feature                   | Status | Details                                  |
+| ------------------------- | ------ | ---------------------------------------- |
+| Forgot password flow      | ❌     | Password reset via email                 |
+| Email verification        | ❌     | Verify email on registration             |
+| Transaction details modal | ❌     | Click on transaction to see full details |
+| PDF transaction reports   | ❌     | Download monthly/yearly statements       |
+| Dark/Light theme toggle   | ❌     | Currently only dark theme                |
+| Mobile responsive menu    | ❌     | Hamburger menu for mobile navigation     |
 
 ---
 
@@ -51,14 +50,11 @@ What still needs to be implemented in the project.
 
 ### Admin Features
 
-| Feature              | Backend                            | Frontend           |
-| -------------------- | ---------------------------------- | ------------------ |
-| View all users       | ✅ `/user/api/all`                 | ❌ Not implemented |
-| Delete users         | ✅ `/user/api/{userId}`            | ❌ Not implemented |
-| Approve/Reject loans | ✅ `/loan-applications/api/status` | ❌ Not implemented |
-| View all tickets     | ✅ `/support-tickets/api`          | ❌ Not implemented |
-| Respond to tickets   | ✅ `/support-ticket-responses/api` | ❌ Not implemented |
-| System analytics     | ❌ Need new endpoints              | ❌ Not implemented |
+| Feature            | Backend                            | Frontend           |
+| ------------------ | ---------------------------------- | ------------------ |
+| View all tickets   | ✅ `/support-tickets/api`          | ❌ Not implemented |
+| Respond to tickets | ✅ `/support-ticket-responses/api` | ❌ Not implemented |
+| Advanced analytics | ❌ Need new endpoints              | ❌ Not implemented |
 
 ---
 
@@ -70,11 +66,12 @@ What still needs to be implemented in the project.
 - [Completed] JWT token handling
 - [Completed] Protected routes
 - [Completed] Role-based access (Admin badge in nav)
+- [Completed] OAuth2 (GitHub Integration)
 
 ### Wallets
 
 - [Completed] View all wallets
-- [Completed] Create wallet
+- [Completed] Create wallet (Fixed 500 error)
 - [Completed] Wallet details page
 - [Completed] Deactivate wallet
 - [Completed] View wallet transactions
@@ -99,42 +96,36 @@ What still needs to be implemented in the project.
 - [Completed] Recent transactions
 - [Completed] Income/expenses summary
 
+### Admin Dashboard
+
+- [Completed] Full Admin Dashboard UI
+- [Completed] User Management (View, Search, Delete)
+- [Completed] Role Management (Promote to Admin, Demote)
+- [Completed] Wallet Management (View, Deactivate)
+- [Completed] Loan Management (View, Approve, Reject)
+- [Completed] System Stats (Users, Wallets, Balance, Loans)
+
 ---
 
-## 📋 Suggested Next  : add any missing features if you want to help me ::)
+## 📋 Suggested Next : add any missing features if you want to help me ::)
 
-### Priority 1 - Quick Wins
+### Priority 1 - Support System
 
-1. [ ] Fix wallet selection dropdown in CreateTransaction (use user's wallets)
-2. [ ] Add user profile page with `updatePassword` functionality
-3. [ ] Add transaction details view on click
-4. [ ] Fix the error in the transfer money page
-5. [ ] Fix the error in the deactive wallet page
+1. [ ] Create Support Tickets page
+2. [ ] SupportTicketService.js with CRUD operations
+3. [ ] Admin ticket response interface
 
-### Priority 2 - Admin Features
+### Priority 2 - User Settings
 
-4. [ ] Build Admin Dashboard with:
-   - User management table
-   - Loan approval/rejection
-   - System stats (total users, total transactions, etc.)
-   - All users page
-   - User details page
-   - delete user buttons
-   - deactive wallet buttons
-    
+4. [ ] Add user profile page with `updatePassword` functionality
+5. [ ] Fix wallet selection dropdown in CreateTransaction (use user's wallets)
 
-### Priority 3 - Support System
+### Priority 3 - Polish
 
-5. [ ] Create Support Tickets page
-6. [ ] SupportTicketService.js with CRUD operations
-7. [ ] Admin ticket response interface
-
-### Priority 4 - Polish
-
-8. [ ] Analytics page with charts (consider Chart.js or Recharts)
-9. [ ] Notification system
-10. [ ] Mobile responsive navigation
-11. [ ] PDF export for transaction reports
+6. [ ] Analytics page with charts (consider Chart.js or Recharts)
+7. [ ] Notification system
+8. [ ] Mobile responsive navigation
+9. [ ] PDF export for transaction reports
 
 ---
 
@@ -149,4 +140,4 @@ What still needs to be implemented in the project.
 
 ---
 
-_Last Updated: February 2, 2026_
+_Last Updated: February 4, 2026_

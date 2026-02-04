@@ -1,4 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 export default function LoansTable({ loans, formatDate }) {
+    const navigate = useNavigate();
+
+    const handleRowClick = (loanId) => {
+        navigate(`/home/admin-dashboard/loan-details/${loanId}`);
+    };
+
     return (
         <div className="bg-[#1a1a1a] border border-red-900/20 rounded-xl overflow-hidden">
             <div className="p-6 border-b border-red-900/20">
@@ -23,7 +31,11 @@ export default function LoansTable({ loans, formatDate }) {
                         </thead>
                         <tbody className="divide-y divide-red-900/10">
                             {loans.map((loan) => (
-                                <tr key={loan.id} className="hover:bg-[#242424] transition-colors">
+                                <tr 
+                                    key={loan.id} 
+                                    onClick={() => handleRowClick(loan.id)}
+                                    className="hover:bg-[#242424] transition-colors cursor-pointer"
+                                >
                                     <td className="px-6 py-4 text-gray-400">#{loan.id}</td>
                                     <td className="px-6 py-4 text-white">{loan.fullName}</td>
                                     <td className="px-6 py-4 text-amber-400 font-semibold">

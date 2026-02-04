@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -22,7 +23,7 @@ public class SecurityConfiguration {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final AuthenticationProvider authenticationProvider;
-
+ private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
   @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws  Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -49,7 +50,9 @@ public class SecurityConfiguration {
             .addFilterBefore(
                     jwtAuthenticationFilter,
                     org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
-
+    http.oauth2Login(oauth2 -> oauth2
+            .successHandler(oAuth2LoginSuccessHandler)
+    );
       return http.build();
 
   }

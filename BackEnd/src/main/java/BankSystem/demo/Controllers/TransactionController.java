@@ -52,4 +52,20 @@ public class TransactionController {
         String report = transactionService.generateMonthlyReport(walletId, month);
         return ResponseEntity.ok(report);
     }
+
+    @Operation(summary = "Get All Transactions for Current User", description = "Retrieve all transactions for the currently authenticated user")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/current-user")
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactionsForCurrentUser() {
+        List<TransactionResponseDTO> response = transactionService.getAllTransactionsForCurrentUser();
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Get All Transactions by Wallet ID", description = "Retrieve all transactions for a specific wallet ID")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/wallet-transactions/{walletId}")
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactionsByWalletId(@PathVariable Long walletId) {
+        List<TransactionResponseDTO> response = transactionService.findAllTransactionsByWalletId(walletId);
+        return ResponseEntity.ok(response);
+    }
 }

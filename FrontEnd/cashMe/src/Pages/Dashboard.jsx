@@ -3,6 +3,7 @@ import { useAuth } from "../services/AuthProvider";
 import { useState, useEffect } from "react";
 import { getUserDetails } from "../services/UserService";
 import { getAllTransactions } from "../services/TransactionService";
+import { getAllWalletsforCurrentUser } from "../services/WalletService";
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -17,10 +18,10 @@ export default function Dashboard() {
                 setLoading(true);
                 const [userData, txnData] = await Promise.all([
                     getUserDetails(),
-                    getAllTransactions()
+                    getAllWalletsforCurrentUser()
                 ]);
                 setUserDetails(userData);
-                setTransactions(txnData.slice(0, 4)); // Get last 4 transactions
+                setTransactions(txnData.slice(0, 4)); 
             } catch (err) {
                 setError(err.message);
                 console.error("Error fetching dashboard data:", err);
@@ -32,11 +33,9 @@ export default function Dashboard() {
         fetchData();
     }, []);
 
-    // Calculate totals from wallets
     const walletCount = userDetails?.wallets?.length || 0;
     const totalBalance = userDetails?.wallets?.reduce((sum, wallet) => sum + parseFloat(wallet.balance || 0), 0) || 0;
 
-    // Calculate income/expenses from transactions
     const income = transactions
         .filter(t => t.receiverUserName === user?.userName)
         .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);

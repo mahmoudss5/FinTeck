@@ -60,9 +60,22 @@ export const AuthProvider = ({ children }) => {
         setIsAdmin(isAdminApi(userData));
     }
 
+    async function loginWithToken(token) {
+        localStorage.setItem("authToken", token);
+        const userData = await fetchProfileApi();
+        setUser(userData);
+        setIsAdmin(isAdminApi(userData));
+    }
+
     return (
-        <AuthContext.Provider value={{ user,setUserData, login, logout, loading, isAdmin,Register}}>
+        <AuthContext.Provider value={{loginWithToken,
+         user,setUserData, 
+         login, logout,
+          loading, isAdmin,
+          Register}}>
+
             {!loading && children}
+        
         </AuthContext.Provider>
     );
 };

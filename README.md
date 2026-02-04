@@ -5,6 +5,8 @@ A full-stack banking application built with Spring Boot and React, providing dig
 ## 🌟 Features
 
 - **User Authentication**: JWT-based registration and login with role-based access
+- **OAuth2 Integration**: Secure Login with GitHub
+- **Admin Dashboard**: Comprehensive admin panel for user, wallet, and loan management
 - **Digital Wallets**: Multi-currency wallet support (USD, EUR, GBP, JPY, CAD, AUD, CHF, EGP)
 - **Fund Transfers**: Secure money transfers between wallets with optimistic locking
 - **Loan Applications**: Submit and track loan applications with calculator

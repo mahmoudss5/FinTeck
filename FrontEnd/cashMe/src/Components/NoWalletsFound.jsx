@@ -18,7 +18,7 @@ export default function NoWalletsFound() {
 
             {/* Create Button */}
             <Link to="/home/wallets/create">
-                <button className="px-6 py-3 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-black font-semibold rounded-lg hover:from-amber-500 hover:via-yellow-400 hover:to-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-[#242424] transform hover:scale-105 transition-all duration-200 shadow-lg shadow-amber-500/20 flex items-center gap-2">
+                <button className="px-6 py-3 bg-linear-to-r from-amber-600 via-yellow-500 to-amber-600 text-black font-semibold rounded-lg hover:from-amber-500 hover:via-yellow-400 hover:to-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-[#242424] transform hover:scale-105 transition-all duration-200 shadow-lg shadow-amber-500/20 flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>

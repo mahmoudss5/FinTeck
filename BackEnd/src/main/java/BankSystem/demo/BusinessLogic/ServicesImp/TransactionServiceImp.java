@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -171,6 +172,36 @@ public class TransactionServiceImp implements TransactionService {
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    @Override
+    public List<TransactionResponseDTO> findAllTransactionsByWalletId(Long walletId) {
+        // Validate wallet exists
+        if (!walletRepository.existsById(walletId)) {
+            throw new RuntimeException("Wallet not found with id: " + walletId);
+        }
+
+        // Find all transactions where the wallet is either sender or receiver
+        return transactionRepository.findBySenderWalletIdOrReceiverWalletId(walletId, walletId)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    @AuditLog
+    public List<TransactionResponseDTO> getAllTransactionsForCurrentUser() {
+
+        List<Wallet> allWallets = walletRepository.findAll();
+        List<TransactionResponseDTO> allTransactions = new ArrayList<>();
+        for (Wallet wallet : allWallets) {
+            List<TransactionResponseDTO> transactions = findAllTransactionsByWalletId(wallet.getId());
+           for(TransactionResponseDTO transaction : transactions) {
+                allTransactions.add(transaction);
+           }
+        }
+
+        return List.of();
     }
 
     @Override

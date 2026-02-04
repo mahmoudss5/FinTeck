@@ -85,4 +85,6 @@ public class WalletController {
       List<WalletResponseDTO> response = walletService.getAllWalletsByUserId(userId);
       return ResponseEntity.ok(response);
   }
+
+
 }

@@ -1,46 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../services/AuthProvider';
 import { getAllTransactions } from '../services/TransactionService';
 
+import { useLoaderData } from 'react-router-dom';
 export default function Transaction() {
     const { user } = useAuth();
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
-    const [transactions, setTransactions] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const rawTransactions = useLoaderData();
 
-    useEffect(() => {
-        const fetchTransactions = async () => {
-            try {
-                setLoading(true);
-                const data = await getAllTransactions();
-                // Map backend data to frontend format
-                const mapped = data.map((txn, index) => ({
-                    id: `TXN${String(index + 1).padStart(3, '0')}`,
-                    type: txn.receiverUserName === user?.userName ? 'received' : 'sent',
-                    amount: parseFloat(txn.amount),
-                    senderName: txn.senderUserName,
-                    receiverName: txn.receiverUserName,
-                    status: txn.status?.toLowerCase() || 'completed',
-                    date: txn.createdAt ? new Date(txn.createdAt).toLocaleDateString('en-US') : 'N/A',
-                    time: txn.createdAt ? new Date(txn.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'N/A',
-                    currency: txn.currency || 'USD'
-                }));
-                setTransactions(mapped);
-            } catch (err) {
-                setError(err.message);
-                console.error("Error fetching transactions:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTransactions();
-    }, [user?.userName]);
+    // Transform backend data to frontend format
+    const transactions = useMemo(() => {
+        if (!rawTransactions || !Array.isArray(rawTransactions)) return [];
+        
+        return rawTransactions.map((txn, index) => ({
+            id: `TXN${String(index + 1).padStart(3, '0')}`,
+            type: txn.receiverUserName === user?.userName ? 'received' : 'sent',
+            amount: parseFloat(txn.amount),
+            senderName: txn.senderUserName,
+            receiverName: txn.receiverUserName,
+            status: txn.status?.toLowerCase() || 'completed',
+            date: txn.createdAt ? new Date(txn.createdAt).toLocaleDateString('en-US') : 'N/A',
+            time: txn.createdAt ? new Date(txn.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'N/A',
+            currency: txn.currency || 'USD'
+        }));
+    }, [rawTransactions, user?.userName]);
 
     // Filter transactions
+    
     const filteredTransactions = transactions.filter(txn => {
         const matchesFilter = filter === 'all' || txn.type === filter;
         const matchesSearch = 
@@ -62,17 +51,6 @@ export default function Transaction() {
         };
         return styles[status] || styles.pending;
     };
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-400">Loading transactions...</p>
-                </div>
-            </div>
-        );
-    }
 
     if (error) {
         return (

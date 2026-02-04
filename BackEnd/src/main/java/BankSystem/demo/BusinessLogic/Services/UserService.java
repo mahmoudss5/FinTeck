@@ -5,8 +5,10 @@ import BankSystem.demo.DataAccessLayer.DTOs.Auth.AuthenticationResponse;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserRequestDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserResponseDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserUpdateRequestDTO;
+import BankSystem.demo.DataAccessLayer.Entites.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -26,4 +28,8 @@ public interface UserService {
     UserResponseDTO demoteFromAdmin(Long id);
     UserResponseDTO getUserDetails();
     Boolean isAdmin(Long userId);
+
+    void save(User newUser);
+
+   Optional<User>findByEmail(String finalEmail);
 }

@@ -20,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -215,7 +212,7 @@ public class UserServiceImp implements UserService {
         User currentUser = userRepositorie.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("Current user not found"));
 
-        if (user.getRoles().contains(RoleType.Admin.name()) && !currentUser.getRoles().contains(RoleType.Owner.name()) ) {
+        if (user.getRoles().contains(RoleType.Admin) && !currentUser.getRoles().contains(RoleType.Owner.name()) ) {
             return false;
         }
         return true;
@@ -229,7 +226,7 @@ public class UserServiceImp implements UserService {
         User user = userRepositorie.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-       if (user.getRoles().contains(RoleType.Admin.name()) && !needOwner(user)) {
+       if (user.getRoles().contains(RoleType.Admin) && !needOwner(user)) {
               throw new RuntimeException("Only Owner can delete Admin users");
        }
         userRepositorie.delete(user);
@@ -239,9 +236,23 @@ public class UserServiceImp implements UserService {
     @Override
     public Boolean isAdmin(Long userId) {
         User user = userRepositorie.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        if (user.getRoles().contains(RoleType.Admin.name())) {
+        if (user.getRoles().contains(RoleType.Admin)) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void save(User newUser) {
+        userRepositorie.save(newUser);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String finalEmail) {
+        User user = userRepositorie.findByEmail(finalEmail).orElse(null);
+        if (user != null) {
+          return Optional.of(user);
+        }
+        return Optional.empty();
     }
 }

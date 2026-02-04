@@ -17,6 +17,10 @@ import LoadingSpinner from "./Components/LoadingSpinner.jsx";
 import CreateTransaction from "./Components/CreateTransaction.jsx";
 import { getWalletById } from "./services/WalletService.js";
 import { getAllWalletsforCurrentUser } from "./services/WalletService.js";
+import LoanDetailsForAdmin from "./Components/Admin/LoanDetailsForAdmin.jsx";
+import { LoadLoanDetails } from "./services/LoanService.js";
+import OAuth2Redirect from "./Pages/OAuth2Redirect.jsx";
+import { getAllUserTransactions } from "./services/TransactionService.js";
 
 function App() {
   const router = createBrowserRouter([
@@ -53,6 +57,7 @@ function App() {
         {
           path: 'transactions',
           element: <ProtectedRoute><Transaction /></ProtectedRoute>,
+          loader: getAllUserTransactions,
           children: [
             {
               path:'add',
@@ -85,12 +90,20 @@ function App() {
           element: <ProtectedRoute>
             <AdminDashboard />
             </ProtectedRoute>
+        },
+        {
+          path: 'admin-dashboard/loan-details/:id',
+          element: <ProtectedRoute>
+            <LoanDetailsForAdmin />
+            </ProtectedRoute>,
+            loader: LoadLoanDetails
         }
       ]
+    },
+    {
+      path: '/oauth2/redirect',
+      element: <OAuth2Redirect />
     }
-
-
-
   ])
 
   return (
