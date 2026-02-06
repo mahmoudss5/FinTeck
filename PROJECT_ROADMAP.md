@@ -18,7 +18,6 @@ What still needs to be implemented in the project.
 | Page                      | Current Status      | What's Needed                                           |
 | ------------------------- | ------------------- | ------------------------------------------------------- |
 | **Analytics**             | Placeholder only    | Charts, graphs, financial insights, spending trends     |
-| **Support Tickets**       | Not created         | Create/view tickets page for customer support           |
 | **User Profile/Settings** | Not created         | Edit profile, change password, notification preferences |
 | **Notifications**         | UI only (bell icon) | Real notification system with backend integration       |
 
@@ -41,7 +40,6 @@ What still needs to be implemented in the project.
 
 | Service                     | Implemented         | Missing                           |
 | --------------------------- | ------------------- | --------------------------------- |
-| **SupportTicketService.js** | ❌ Not created      | Create, get, update tickets       |
 | **UserService.js**          | ✅ `getUserDetails` | `updatePassword`, `updateProfile` |
 
 ### Admin Features
@@ -60,8 +58,6 @@ What still needs to be implemented in the project.
 
 ### Priority 1 - Support System
 
-1. [ ] Create Support Tickets page
-2. [ ] SupportTicketService.js with CRUD operations
 3. [ ] Admin ticket response interface
 
 ### Priority 2 - User Settings
@@ -90,4 +86,4 @@ What still needs to be implemented in the project.
 
 ---
 
-_Last Updated: February 4, 2026_
+_Last Updated: February 6, 2026_
