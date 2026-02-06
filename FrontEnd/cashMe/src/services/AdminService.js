@@ -32,11 +32,10 @@ export const deleteUser = async (userId) => {
     return await response.json();
 };
 
-export const updateWalletStatus = async (walletId, status) => {
-    const response = await fetch(`${API_BASE_URL}/wallets/api/${walletId}`, {
+export const updateWalletStatus = async (walletId) => {
+    const response = await fetch(`${API_BASE_URL}/wallets/api/deactivate/${walletId}`, {
         method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify({ status }),
+        headers: getHeaders()
     });
     if (!response.ok) {
         throw new Error("Failed to update wallet status");

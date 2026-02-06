@@ -8,11 +8,10 @@ What still needs to be implemented in the project.
 
 ### Backend :
 
-### 1-Use web sockets for real time notifications and realtime chat between users
+### 1-Use web sockets for real time notifications and realtime chat between users (in the future probably the next month)
 
-### 2-Use redis for caching and message queue
-
-### 3- Add owner role capabilities (create permissions for others)
+### 2- handle token expiration time and refresh token
+### 3- handle idempotency for transactions
 
 ### Frontend Pages
 
@@ -44,9 +43,6 @@ What still needs to be implemented in the project.
 | --------------------------- | ------------------- | --------------------------------- |
 | **SupportTicketService.js** | ❌ Not created      | Create, get, update tickets       |
 | **UserService.js**          | ✅ `getUserDetails` | `updatePassword`, `updateProfile` |
-| **LoanService.js**          | ✅ Complete         | -                                 |
-| **TransactionService.js**   | ✅ Complete         | -                                 |
-| **WalletService.js**        | ✅ Complete         | -                                 |
 
 ### Admin Features
 
@@ -58,54 +54,7 @@ What still needs to be implemented in the project.
 
 ---
 
-## 🟢 Completed
 
-### Authentication
-
-- [Completed] Login / Register
-- [Completed] JWT token handling
-- [Completed] Protected routes
-- [Completed] Role-based access (Admin badge in nav)
-- [Completed] OAuth2 (GitHub Integration)
-
-### Wallets
-
-- [Completed] View all wallets
-- [Completed] Create wallet (Fixed 500 error)
-- [Completed] Wallet details page
-- [Completed] Deactivate wallet
-- [Completed] View wallet transactions
-
-### Transactions
-
-- [Completed] View all transactions
-- [Completed] Filter by type (sent/received)
-- [x] Search transactions
-- [Completed] Create new transfer
-
-### Loans
-
-- [Completed] View my loan applications
-- [Completed] Loan calculator
-- [Completed] Apply for new loan
-- [Completed] Status badges
-
-### Dashboard
-
-- [Completed] Wallet count & total balance
-- [Completed] Recent transactions
-- [Completed] Income/expenses summary
-
-### Admin Dashboard
-
-- [Completed] Full Admin Dashboard UI
-- [Completed] User Management (View, Search, Delete)
-- [Completed] Role Management (Promote to Admin, Demote)
-- [Completed] Wallet Management (View, Deactivate)
-- [Completed] Loan Management (View, Approve, Reject)
-- [Completed] System Stats (Users, Wallets, Balance, Loans)
-
----
 
 ## 📋 Suggested Next : add any missing features if you want to help me ::)
 
@@ -126,6 +75,7 @@ What still needs to be implemented in the project.
 7. [ ] Notification system
 8. [ ] Mobile responsive navigation
 9. [ ] PDF export for transaction reports
+10. [ ] Refactor: Use Context API in frontend for data that fails to change frequently
 
 ---
 

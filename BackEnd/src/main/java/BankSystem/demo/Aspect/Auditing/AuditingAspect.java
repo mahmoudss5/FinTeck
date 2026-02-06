@@ -2,18 +2,14 @@ package BankSystem.demo.Aspect.Auditing;
 
 import BankSystem.demo.Config.ClientIpResolver;
 import BankSystem.demo.BusinessLogic.Services.AuditLogService;
-import BankSystem.demo.Config.SecurityUtils;
-import BankSystem.demo.DataAccessLayer.Entites.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import static BankSystem.demo.Config.SecurityUtils.getCurrentUserId;
+import static BankSystem.demo.Config.SecurityConfig.SecurityUtils.getCurrentUserId;
 
 @Aspect
 @Component

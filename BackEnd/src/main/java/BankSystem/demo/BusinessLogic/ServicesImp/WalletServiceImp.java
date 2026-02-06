@@ -155,7 +155,6 @@ public class WalletServiceImp implements WalletService {
 
     @Override
     @OnlyForSameUser
-   @AuditLog
     public List<WalletResponseDTO> getAllWalletsForCurrentUser() {
         Long currentUserId = currentUserProvider.getCurrentUserId();
         if (currentUserId == null) {
@@ -192,7 +191,6 @@ public class WalletServiceImp implements WalletService {
 
     @Override
     @RequiresAdmin
-    @AuditLog
     public List<WalletResponseDTO> getAllWalletsByUserId(Long userId) {
         if (userId == null) {
             throw new RuntimeException("User ID cannot be null");

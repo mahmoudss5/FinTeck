@@ -21,6 +21,8 @@ import LoanDetailsForAdmin from "./Components/Admin/LoanDetailsForAdmin.jsx";
 import { LoadLoanDetails } from "./services/LoanService.js";
 import OAuth2Redirect from "./Pages/OAuth2Redirect.jsx";
 import { getAllUserTransactions } from "./services/TransactionService.js";
+import Support from "./Pages/Support.jsx";
+import { TicketProvider } from "./context/TicketContext.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -44,7 +46,7 @@ function App() {
     },
     {
       path: '/home',
-      element: <RootLayout />,
+      element: <TicketProvider><RootLayout /></TicketProvider>,
       children: [
         {
           index: true,
@@ -97,6 +99,12 @@ function App() {
             <LoanDetailsForAdmin />
             </ProtectedRoute>,
             loader: LoadLoanDetails
+        },
+        {
+          path: 'support',
+          element: <ProtectedRoute>
+            <Support />
+            </ProtectedRoute>
         }
       ]
     },

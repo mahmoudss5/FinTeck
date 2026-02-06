@@ -3,6 +3,7 @@ package BankSystem.demo.Controllers;
 import BankSystem.demo.BusinessLogic.Services.UserService;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserResponseDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserUpdateRequestDTO;
+import BankSystem.demo.Util.UserListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -38,8 +39,8 @@ public class UserController {
     @ResponseStatus(org.springframework.http.HttpStatus.OK)
     @Operation(summary = "get all users", description = "Retrieve all users in the system")
     @GetMapping("/all")
-    public ResponseEntity<java.util.List<UserResponseDTO>> getAllUsers() {
-        java.util.List<UserResponseDTO> response = userService.getUsers();
+    public ResponseEntity<UserListResponse> getAllUsers() {
+        UserListResponse response = userService.getUsers();
         return ResponseEntity.ok(response);
     }
 

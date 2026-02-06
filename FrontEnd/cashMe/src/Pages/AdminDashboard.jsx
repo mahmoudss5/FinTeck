@@ -29,7 +29,7 @@ export default function AdminDashboard() {
                 getAllWallets(),
                 getAllLoans().catch(() => []) 
             ]);
-            setUsers(usersData);
+            setUsers(usersData.users || []); // Extract users array from response object
             setWallets(walletsData);
             setLoans(loansData);
         } catch (err) {
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
         }
         try {
             setActionLoading(walletId);
-            await updateWalletStatus(walletId, 'INACTIVE');
+            await updateWalletStatus(walletId);
             setWallets(wallets.map(w => w.id === walletId ? { ...w, active: false } : w));
         } catch (err) {
             alert('Failed to deactivate wallet: ' + err.message);
@@ -244,7 +244,7 @@ export default function AdminDashboard() {
                 <WalletsTable
                     wallets={wallets}
                     actionLoading={actionLoading}
-                    onDeactivate={handleDeactivateWallet}
+                    onDeactivate={handleDeactivateWallet}  
                     formatDate={formatDate}
                 />
             )}

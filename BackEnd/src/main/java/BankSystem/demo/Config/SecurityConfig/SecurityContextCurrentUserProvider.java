@@ -1,5 +1,6 @@
-package BankSystem.demo.Config;
+package BankSystem.demo.Config.SecurityConfig;
 
+import BankSystem.demo.Config.CurrentUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

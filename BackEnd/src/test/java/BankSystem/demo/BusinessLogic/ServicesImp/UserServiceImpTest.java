@@ -1,7 +1,7 @@
 package BankSystem.demo.BusinessLogic.ServicesImp;
 
 import BankSystem.demo.Config.CurrentUserProvider;
-import BankSystem.demo.Config.JwtService;
+import BankSystem.demo.Config.SecurityConfig.JwtService;
 import BankSystem.demo.DataAccessLayer.DTOs.Auth.AuthenticationRequest;
 import BankSystem.demo.DataAccessLayer.DTOs.Auth.AuthenticationResponse;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserRequestDTO;
@@ -12,6 +12,7 @@ import BankSystem.demo.DataAccessLayer.Entites.SecurityUser;
 import BankSystem.demo.DataAccessLayer.Entites.User;
 import BankSystem.demo.DataAccessLayer.Repositories.RoleRepository;
 import BankSystem.demo.DataAccessLayer.Repositories.UserRepositorie;
+import BankSystem.demo.Util.UserListResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -295,7 +296,7 @@ class UserServiceImpTest {
         when(userRepositorie.findAll()).thenReturn(List.of(user1, user2));
 
         // Act
-        List<UserResponseDTO> result = userServiceImp.getUsers();
+        UserListResponse result = userServiceImp.getUsers();
 
         // Assert
         assertNotNull(result);
@@ -311,7 +312,7 @@ class UserServiceImpTest {
         when(userRepositorie.findAll()).thenReturn(Collections.emptyList());
 
         // Act
-        List<UserResponseDTO> result = userServiceImp.getUsers();
+        UserListResponse result = userServiceImp.getUsers();
 
         // Assert
         assertNotNull(result);
@@ -325,14 +326,14 @@ class UserServiceImpTest {
         when(userRepositorie.findAll()).thenReturn(List.of(user));
 
         // Act
-        List<UserResponseDTO> result = userServiceImp.getUsers();
+        UserListResponse result = userServiceImp.getUsers();
 
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals("testuser", result.get(0).getUserName());
         assertEquals("test@gmail.com", result.get(0).getEmail());
-        assertNotNull(result.getFirst().getRoles());
+        assertNotNull(result.get(0).getRoles());
         verify(userRepositorie, times(1)).findAll();
     }
 }

@@ -1,4 +1,4 @@
-package BankSystem.demo.Config;
+package BankSystem.demo.Config.SecurityConfig;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,7 +1,7 @@
 package BankSystem.demo.Aspect.Loging;
 
 import BankSystem.demo.BusinessLogic.Services.AuditLogService;
-import BankSystem.demo.Config.JwtService;
+import BankSystem.demo.Config.SecurityConfig.JwtService;
 import BankSystem.demo.DataAccessLayer.DTOs.Auth.AuthenticationResponse;
 import BankSystem.demo.DataAccessLayer.Entites.User;
 import BankSystem.demo.DataAccessLayer.Repositories.UserRepositorie;

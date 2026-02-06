@@ -1,4 +1,4 @@
-package BankSystem.demo.Config;
+package BankSystem.demo.Config.SecurityConfig;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

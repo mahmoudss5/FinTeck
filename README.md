@@ -28,6 +28,7 @@ A full-stack banking application built with Spring Boot and React, providing dig
 | MySQL             | 8.x     | Database                                                    |
 | Flyway            | -       | Database Migrations                                         |
 | Lombok            | -       | Code Generation                                             |
+| Redis             | -       | Caching & Message Queue                                     |
 | SpringDoc OpenAPI | 2.7.0   | API Documentation                                           |
 
 ### Frontend

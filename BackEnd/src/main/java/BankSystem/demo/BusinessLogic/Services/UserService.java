@@ -6,6 +6,7 @@ import BankSystem.demo.DataAccessLayer.DTOs.User.UserRequestDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserResponseDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserUpdateRequestDTO;
 import BankSystem.demo.DataAccessLayer.Entites.User;
+import BankSystem.demo.Util.UserListResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public interface UserService {
 
     UserResponseDTO deleteUser(Long id);
 
-    List<UserResponseDTO> getUsers();
+    UserListResponse getUsers();
 
     UserResponseDTO getUserById(Long id);
 

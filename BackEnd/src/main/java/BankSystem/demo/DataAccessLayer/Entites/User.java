@@ -1,5 +1,5 @@
 package BankSystem.demo.DataAccessLayer.Entites;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,5 +47,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
+    @JsonIgnore // to avoid infinite recursion when serializing to JSON (because Wallet has a reference back to User) (باختصار لما بيحاول يطبع الحاجات دي بيروح يطبع اليوزر بتاع كل محفظه واليوزر عنده محفاظ يحاول يطبعها برضو ولووب بقي )
     private java.util.List<Wallet> wallets = new java.util.ArrayList<>();
 }

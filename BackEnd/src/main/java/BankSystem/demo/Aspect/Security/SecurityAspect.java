@@ -7,12 +7,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import static BankSystem.demo.Config.SecurityUtils.getCurrentUserId;
-import BankSystem.demo.DataAccessLayer.Entites.User;
-import BankSystem.demo.DataAccessLayer.Repositories.UserRepositorie;
+
+import static BankSystem.demo.Config.SecurityConfig.SecurityUtils.getCurrentUserId;
 
 @Aspect
 @Component // this is a component for the class

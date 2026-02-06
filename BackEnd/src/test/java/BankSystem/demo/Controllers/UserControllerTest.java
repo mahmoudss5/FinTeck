@@ -3,6 +3,7 @@ package BankSystem.demo.Controllers;
 import BankSystem.demo.BusinessLogic.Services.UserService;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserRequestDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserUpdateRequestDTO;
+import BankSystem.demo.Util.UserListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,7 +93,7 @@ class UserControllerTest {
         @Test
         void itShouldReturtnAllUsers() throws Exception {
                 // Arrange
-                java.util.List<UserResponseDTO> users = java.util.List.of(
+                UserListResponse users = new UserListResponse(java.util.List.of(
                                 UserResponseDTO.builder()
                                                 .id(1L)
                                                 .userName("john_doe")
@@ -110,15 +111,15 @@ class UserControllerTest {
                                                 .lastName("Doe")
                                                 .createdAt(java.time.LocalDateTime.now())
                                                 .roles(java.util.Set.of("User"))
-                                                .build());
+                                                .build()));
                 given(userService.getUsers()).willReturn(users);
 
                 // Act & Assert
                 mockMvc.perform(get("/user/api/all"))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.length()").value(2))
-                                .andExpect(jsonPath("$[0].id").value(1L))
-                                .andExpect(jsonPath("$[1].id").value(2L));
+                                .andExpect(jsonPath("$.users.length()").value(2))
+                                .andExpect(jsonPath("$.users[0].id").value(1L))
+                                .andExpect(jsonPath("$.users[1].id").value(2L));
         }
 
         @Test
@@ -203,12 +204,12 @@ class UserControllerTest {
         @Test
         void itShouldReturnEmptyListWhenNoUsersExist() throws Exception {
                 // Arrange
-                given(userService.getUsers()).willReturn(java.util.List.of());
+                given(userService.getUsers()).willReturn(new UserListResponse(java.util.List.of()));
 
                 // Act & Assert
                 mockMvc.perform(get("/user/api/all"))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.length()").value(0));
+                                .andExpect(jsonPath("$.users.length()").value(0));
         }
 
         @Test

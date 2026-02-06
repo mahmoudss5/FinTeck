@@ -6,17 +6,20 @@ import BankSystem.demo.Aspect.Security.OnlyForSameUser;
 import BankSystem.demo.Aspect.Security.RequiresAdmin;
 import BankSystem.demo.BusinessLogic.Services.UserService;
 import BankSystem.demo.Config.CurrentUserProvider;
-import BankSystem.demo.Config.JwtService;
+import BankSystem.demo.Config.SecurityConfig.JwtService;
 import BankSystem.demo.DataAccessLayer.DTOs.Auth.AuthenticationRequest;
 import BankSystem.demo.DataAccessLayer.DTOs.Auth.AuthenticationResponse;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserRequestDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserResponseDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.User.UserUpdateRequestDTO;
-import BankSystem.demo.DataAccessLayer.DTOs.Wallet.WalletResponseDTO;
 import BankSystem.demo.DataAccessLayer.Entites.*;
 import BankSystem.demo.DataAccessLayer.Repositories.RoleRepository;
 import BankSystem.demo.DataAccessLayer.Repositories.UserRepositorie;
+import BankSystem.demo.DataAccessLayer.Repositories.WalletRepository;
+import BankSystem.demo.Util.UserListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,7 @@ public class UserServiceImp implements UserService {
     private final JwtService jwtService;
     private final CurrentUserProvider currentUserProvider;
     private final WalletServiceImp walletService;
+    private final WalletRepository walletRepository;
 
     private User convertRequestToUser(UserRequestDTO dto, Role role) {
         Set<Role> roles = new HashSet<>();
@@ -69,6 +73,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     @PerformanceAspect
+    @CacheEvict(value = "usersAll_v4", allEntries = true)
     public AuthenticationResponse registerUser(UserRequestDTO userRequestDTO) {
         if (userRepositorie.existsByEmail(userRequestDTO.getEmail())) {
             throw new RuntimeException("Email is already in use");
@@ -117,6 +122,10 @@ public class UserServiceImp implements UserService {
     @Override
     @AuditLog
     @OnlyForSameUser
+    @CacheEvict(
+            cacheNames = {"usersById", "usersAll_v4", "usersByEmail", "isAdmin"},
+            allEntries = true
+    )
     public UserResponseDTO updatePassword(UserUpdateRequestDTO userUpdateRequestDTO) {
         Long currentUserId = currentUserProvider.getCurrentUserId();
 
@@ -142,17 +151,19 @@ public class UserServiceImp implements UserService {
     @Override
     @PerformanceAspect
     @RequiresAdmin
-    public List<UserResponseDTO> getUsers() {
+    @Cacheable(cacheNames = "usersAll_v4")
+    public UserListResponse getUsers() {
         List<User> users = userRepositorie.findAll();
-        List<UserResponseDTO> responseDTOS = users.stream()
+        List<UserResponseDTO> userResponses = users.stream()
                 .map(this::ConvertUserToResponse)
                 .toList();
 
-        return responseDTOS;
+        return new UserListResponse(userResponses);
     }
 
     @Override
     @OnlyForSameUser
+    @Cacheable(cacheNames = "usersById", key = "#id")
     public UserResponseDTO getUserById(Long id) {
         User user = userRepositorie.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -162,6 +173,10 @@ public class UserServiceImp implements UserService {
     @Override
     @RequiresAdmin
     @AuditLog
+    @CacheEvict(
+            cacheNames = {"usersById", "usersAll_v4", "usersByEmail", "isAdmin"},
+            allEntries = true
+    )
     public UserResponseDTO promoteToAdmin(Long id) {
         User user = userRepositorie.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -178,18 +193,22 @@ public class UserServiceImp implements UserService {
 
     @Override
     @AuditLog
+    @CacheEvict(
+            cacheNames = {"usersById", "usersAll_v4", "usersByEmail", "isAdmin"},
+            allEntries = true
+    )
     public UserResponseDTO demoteFromAdmin(Long id) {
-      User user = userRepositorie.findById(id)
+        User user = userRepositorie.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-      if (!needOwner(user)) {
+        if (!needOwner(user)) {
             throw new RuntimeException("Only Owner can demote Admin users");
-      }
+        }
 
-      Role adminRole = roleRepository.findByName(RoleType.Admin.name());
-      if (adminRole != null) {
-          user.getRoles().remove(adminRole);
-      }
+        Role adminRole = roleRepository.findByName(RoleType.Admin.name());
+        if (adminRole != null) {
+            user.getRoles().remove(adminRole);
+        }
 
         userRepositorie.save(user);
         return ConvertUserToResponse(user);
@@ -201,8 +220,10 @@ public class UserServiceImp implements UserService {
         if (currentUserId == null) {
             throw new RuntimeException("User not authenticated");
         }
-        User user = userRepositorie.findById(currentUserId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        String userEmail= userRepositorie.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getEmail();
+       User user=userRepositorie.findByEmailWithWallets(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
         return ConvertUserToResponse(user);
     }
 
@@ -222,18 +243,23 @@ public class UserServiceImp implements UserService {
     @Override
     @RequiresAdmin
     @AuditLog
+    @CacheEvict(
+            cacheNames = {"usersById", "usersAll_v4", "usersByEmail", "isAdmin"},
+            allEntries = true
+    )
     public UserResponseDTO deleteUser(Long id) {
         User user = userRepositorie.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-       if (user.getRoles().contains(RoleType.Admin) && !needOwner(user)) {
-              throw new RuntimeException("Only Owner can delete Admin users");
-       }
+        if (user.getRoles().contains(RoleType.Admin) && !needOwner(user)) {
+            throw new RuntimeException("Only Owner can delete Admin users");
+        }
         userRepositorie.delete(user);
         return ConvertUserToResponse(user);
     }
 
     @Override
+    @Cacheable(cacheNames = "isAdmin", key = "#userId")
     public Boolean isAdmin(Long userId) {
         User user = userRepositorie.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         if (user.getRoles().contains(RoleType.Admin)) {
@@ -243,15 +269,20 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @CacheEvict(
+            cacheNames = {"usersById", "usersAll_v4", "usersByEmail", "isAdmin"},
+            allEntries = true
+    )
     public void save(User newUser) {
         userRepositorie.save(newUser);
     }
 
     @Override
+    @Cacheable(cacheNames = "usersByEmail", key = "#finalEmail")
     public Optional<User> findByEmail(String finalEmail) {
         User user = userRepositorie.findByEmail(finalEmail).orElse(null);
         if (user != null) {
-          return Optional.of(user);
+            return Optional.of(user);
         }
         return Optional.empty();
     }
