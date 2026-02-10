@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../services/AuthProvider';
-import { getUserLoans, applyForLoan } from '../services/LoanService';
+import { useAuth } from '../../context/AuthProvider';
+import { getUserLoans, applyForLoan } from '../../services/LoanService';
 
 export default function Loan() {
     const { user } = useAuth();

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getAllUsers, deleteUser, getAllWallets, getAllLoans, promoteUserToAdmin, demoteAdmin, updateWalletStatus } from '../services/AdminService';
-import { useAuth } from '../services/AuthProvider';
-import UsersTable from '../Components/Admin/UsersTable';
-import WalletsTable from '../Components/Admin/WalletsTable';
-import LoansTable from '../Components/Admin/LoansTable';
+import { getAllUsers, deleteUser, getAllWallets, getAllLoans, promoteUserToAdmin, demoteAdmin, updateWalletStatus } from '../../services/AdminService';
+import { useAuth } from '../../context/AuthProvider';
+import UsersTable from '../../Components/Admin/UsersTable';
+import WalletsTable from '../../Components/Admin/WalletsTable';
+import LoansTable from '../../Components/Admin/LoansTable';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');

@@ -1,4 +1,4 @@
-import { API_BASE_URL, getHeaders } from "./config.jsx";
+import { API_BASE_URL, getHeaders } from "./config";
 
 export const getUserDetails = async () => {
     const response = await fetch(`${API_BASE_URL}/user/api/me`, {

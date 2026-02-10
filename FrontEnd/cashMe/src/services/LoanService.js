@@ -1,4 +1,4 @@
-import { API_BASE_URL, getHeaders } from "./config.jsx";
+import { API_BASE_URL, getHeaders } from "./config.js";
 
 export const getUserLoans = async (userId) => {
     const response = await fetch(`${API_BASE_URL}/loan-applications/api/user/${userId}`, {

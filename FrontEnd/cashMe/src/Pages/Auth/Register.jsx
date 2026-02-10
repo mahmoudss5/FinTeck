@@ -1,6 +1,6 @@
 import { Form, Link } from 'react-router-dom'
-import logo from '../assets/logo.png'
-import { useAuth } from '../services/AuthProvider'
+import logo from '../../assets/logo.png'
+import { useAuth } from '../../context/AuthProvider'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 export default function Register() {

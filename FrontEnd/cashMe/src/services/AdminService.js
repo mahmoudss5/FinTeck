@@ -77,10 +77,10 @@ export const deleteWallet = async (walletId) => {
 };
 
 export const updateLoanStatus = async (loanId, status) => {
-    const response = await fetch(`${API_BASE_URL}/loans/api/${loanId}`, {
-        method: "PUT",
+    const response = await fetch(`${API_BASE_URL}/loan-applications/api/status`, {
+        method: "PATCH",
         headers: getHeaders(),
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ id: loanId, status }),
     });
     if (!response.ok) {
         throw new Error("Failed to update loan status");

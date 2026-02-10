@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate, useRevalidator } from "react-router-dom";
 import { useState } from "react";
-import { deactivateWallet } from "../services/WalletService";
+import { deactivateWallet } from "../../services/WalletService";
 
 export default function WalletDetails() {
     const { wallet, transactions } = useLoaderData();

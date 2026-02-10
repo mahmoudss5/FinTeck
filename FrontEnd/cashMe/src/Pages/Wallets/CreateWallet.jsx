@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { createWallet } from '../services/WalletService'
+import { createWallet } from '../../services/WalletService'
 import { useNavigate,useRevalidator } from 'react-router-dom'
 export default function CreateWallet() {
- 
+
     const [error, setError] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate=useNavigate()

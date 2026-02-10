@@ -1,5 +1,5 @@
 import { API_BASE_URL, getHeaders } from "./config";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 
 // ============================================
 // AUTH TOKEN MANAGEMENT
@@ -12,7 +12,7 @@ const TOKEN_KEY = "authToken";
  * @param {Object} user - User object with roles property
  * @returns {boolean}
  */
- 
+
 export const isAdmin = (user) => {
   if (!user || !user.roles) return false;
   return user.roles.includes("Admin");

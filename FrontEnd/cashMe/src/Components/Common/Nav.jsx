@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import logo from '../assets/logo.png'
-import { useAuth } from '../services/AuthProvider'
+import logo from '../../assets/logo.png'
+import { useAuth } from '../../context/AuthProvider'
 
 export default function Nav() {
     const { user, isAdmin, logout } = useAuth();

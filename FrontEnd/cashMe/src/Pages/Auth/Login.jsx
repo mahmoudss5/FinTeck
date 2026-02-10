@@ -1,9 +1,9 @@
 import { Form, Link } from 'react-router-dom'
-import logo from '../assets/logo.png'
-import { useAuth } from '../services/AuthProvider';
+import logo from '../../assets/logo.png'
+import { useAuth } from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { API_BASE_URL } from '../services/config';
+import { API_BASE_URL } from '../../services/config';
 
 export default function Login() {
   const [error, setError] = useState('');

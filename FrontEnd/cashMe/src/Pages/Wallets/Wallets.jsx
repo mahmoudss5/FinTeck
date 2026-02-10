@@ -1,5 +1,5 @@
-import NoWalletsFound from "../Components/NoWalletsFound.jsx";
-import AvailableWallets from "../Components/AvailableWallets.jsx";
+import NoWalletsFound from "../../Components/Wallets/NoWalletsFound.jsx";
+import AvailableWallets from "../../Components/Wallets/AvailableWallets.jsx";
 import { useLoaderData } from "react-router-dom";
 
 export default function Wallets() {

@@ -1,27 +1,27 @@
 import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Auth from "./Pages/Auth.jsx";
-import RootLayout from "./Pages/RootLayout.jsx";
-import Register from "./Pages/Register.jsx";
-import Dashboard from "./Pages/Dashboard.jsx";
-import Loan from "./Pages/Loan.jsx";
-import Transaction from "./Pages/Transaction.jsx";
-import Wallets from "./Pages/Wallets.jsx";
-import WalletDetails from "./Components/WalletDetails.jsx";
-import CreateWallet from "./Pages/CreateWallet.jsx";
-import ProtectedRoute from "./Components/ProtectedRoute.jsx";
-import Login from "./Pages/Login.jsx";
-import ComingSoon from "./Pages/ComingSoon.jsx";
-import AdminDashboard from "./Pages/AdminDashboard.jsx";
-import LoadingSpinner from "./Components/LoadingSpinner.jsx";
-import CreateTransaction from "./Components/CreateTransaction.jsx";
+import Auth from "./Pages/Auth/Auth.jsx";
+import RootLayout from "./Pages/Common/RootLayout.jsx";
+import Register from "./Pages/Auth/Register.jsx";
+import Dashboard from "./Pages/Common/Dashboard.jsx";
+import Loan from "./Pages/Loans/Loan.jsx";
+import Transaction from "./Pages/Common/Transaction.jsx";
+import Wallets from "./Pages/Wallets/Wallets.jsx";
+import WalletDetails from "./Components/Wallets/WalletDetails.jsx";
+import CreateWallet from "./Pages/Wallets/CreateWallet.jsx";
+import ProtectedRoute from "./Components/Common/ProtectedRoute.jsx";
+import Login from "./Pages/Auth/Login.jsx";
+import ComingSoon from "./Pages/Common/ComingSoon.jsx";
+import AdminDashboard from "./Pages/Admin/AdminDashboard.jsx";
+import LoadingSpinner from "./Components/Common/LoadingSpinner.jsx";
+import CreateTransaction from "./Components/Transactions/CreateTransaction.jsx";
 import { getWalletById } from "./services/WalletService.js";
 import { getAllWalletsforCurrentUser } from "./services/WalletService.js";
 import LoanDetailsForAdmin from "./Components/Admin/LoanDetailsForAdmin.jsx";
 import { LoadLoanDetails } from "./services/LoanService.js";
-import OAuth2Redirect from "./Pages/OAuth2Redirect.jsx";
+import OAuth2Redirect from "./Pages/Auth/OAuth2Redirect.jsx";
 import { getAllUserTransactions } from "./services/TransactionService.js";
-import Support from "./Pages/Support.jsx";
+import Support from "./Pages/Common/Support.jsx";
 import { TicketProvider } from "./context/TicketContext.jsx";
 
 function App() {

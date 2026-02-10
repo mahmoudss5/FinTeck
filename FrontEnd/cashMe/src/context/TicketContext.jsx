@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { getUserTickets, getTicketById, getTicketResponses, createTicket, createTicketResponse } from '../services/TicketService';
-import { useAuth } from '../services/AuthProvider';
+import { useAuth } from './AuthProvider';
 
 const TicketContext = createContext();
 

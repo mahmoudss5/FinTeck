@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { formatCategoryName, formatStatusName, getStatusColor, TICKET_STATUS } from '../../constants/ticketConstants';
 import TicketResponseItem from './TicketResponseItem';
-import { useAuth } from '../../services/AuthProvider';
+import { useAuth } from '../../context/AuthProvider';
 import { deleteTicketResponse, updateTicketStatus } from '../../services/TicketService';
 
 export default function TicketDetail({ ticket, responses, onBack, onResponseAdded, onStatusUpdated }) {

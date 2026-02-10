@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Modal from "./Modal";
+import Modal from "../Common/Modal";
 import { useNavigate } from "react-router-dom";
-import { transferMoney } from "../services/WalletService";
+import { transferMoney } from "../../services/WalletService";
 export default function CreateTransaction() {
     const navigate = useNavigate();
     const [error,setError] = useState(''); 

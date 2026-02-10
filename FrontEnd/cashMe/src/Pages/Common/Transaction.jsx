@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { useAuth } from '../services/AuthProvider';
-import { getAllTransactions } from '../services/TransactionService';
+import { useAuth } from '../../context/AuthProvider';
+import { getAllTransactions } from '../../services/TransactionService';
 
 import { useLoaderData } from 'react-router-dom';
 export default function Transaction() {

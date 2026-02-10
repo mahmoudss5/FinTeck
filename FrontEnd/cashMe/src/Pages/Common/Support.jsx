@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useTicket } from '../context/TicketContext';
-import TicketList from '../Components/Support/TicketList';
-import TicketDetail from '../Components/Support/TicketDetail';
-import TicketForm from '../Components/Support/TicketForm';
+import { useTicket } from '../../context/TicketContext';
+import TicketList from '../../Components/Support/TicketList';
+import TicketDetail from '../../Components/Support/TicketDetail';
+import TicketForm from '../../Components/Support/TicketForm';
 
 export default function Support() {
     const [view, setView] = useState('list'); // 'list', 'detail', 'create'

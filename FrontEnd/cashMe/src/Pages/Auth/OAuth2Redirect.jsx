@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAuth } from "../services/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function OAuth2Redirect() {

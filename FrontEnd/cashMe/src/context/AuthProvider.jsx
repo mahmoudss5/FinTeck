@@ -6,7 +6,7 @@ import {
     fetchProfile as fetchProfileApi,
     isAdmin as isAdminApi,
     register as registerApi
-} from "./authService";
+} from "../services/authService";
 
 const AuthContext = createContext(null);
 

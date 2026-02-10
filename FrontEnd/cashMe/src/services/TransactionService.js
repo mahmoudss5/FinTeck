@@ -1,4 +1,4 @@
-import { API_BASE_URL, getHeaders } from "./config.jsx";
+import { API_BASE_URL, getHeaders } from "./config.js";
 
 export const getAllTransactions = async () => {
     const response = await fetch(`${API_BASE_URL}/transactions/api/all`, {

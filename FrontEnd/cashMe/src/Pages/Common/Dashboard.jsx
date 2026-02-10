@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../services/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 import { useState, useEffect } from "react";
-import { getUserDetails } from "../services/UserService";
-import { getAllTransactions } from "../services/TransactionService";
-import { getAllWalletsforCurrentUser } from "../services/WalletService";
+import { getUserDetails } from "../../services/UserService";
+import { getAllTransactions } from "../../services/TransactionService";
+import { getAllWalletsforCurrentUser } from "../../services/WalletService";
 
 export default function Dashboard() {
     const { user } = useAuth();
