@@ -45,39 +45,47 @@ A full-stack banking application built with Spring Boot and React, providing dig
 ```
 finTech/
 ├── BackEnd/
-│   ├── src/main/java/BankSystem/demo/
-│   │   ├── BusinessLogic/
-│   │   │   ├── Services/           # Service interfaces
-│   │   │   └── ServicesImp/        # Service implementations
-│   │   ├── Config/                 # Security, JWT, Exception handling
-│   │   ├── Controllers/            # REST API endpoints
-│   │   └── DataAccessLayer/
-│   │       ├── DTOs/               # Data Transfer Objects
-│   │       ├── Entites/            # JPA Entities
-│   │       └── Repositories/       # Spring Data Repositories
-│   └── src/main/resources/
-│       ├── application.properties  # App configuration
-│       └── db/migration/           # Flyway migrations
+│   ├── pom.xml
+│   └── src/
+│       ├── main/
+│       │   ├── java/BankSystem/demo/
+│       │   │   ├── AzBankApplication.java        # Spring Boot entry point
+│       │   │   ├── Aspect/                       # AOP (logging, auditing, performance, security)
+│       │   │   ├── BusinessLogic/
+│       │   │   │   ├── Services/                 # Service interfaces
+│       │   │   │   └── ServicesImp/              # Service implementations
+│       │   │   ├── Config/                       # Security, JWT, Redis, OpenAPI, exception handling
+│       │   │   ├── Controllers/                  # REST API controllers
+│       │   │   ├── DataAccessLayer/
+│       │   │   │   ├── DTOs/                     # Data Transfer Objects
+│       │   │   │   ├── Entites/                  # JPA entities
+│       │   │   │   └── Repositories/             # Spring Data repositories
+│       │   │   └── Util/                         # Helper classes
+│       │   └── resources/
+│       │       ├── application.properties        # App configuration
+│       │       └── db/migration/                 # Flyway migrations
+│       └── test/
+│           └── java/BankSystem/demo/             # Unit & integration tests
 │
 └── FrontEnd/cashMe/
+    ├── package.json
     └── src/
-        ├── Components/             # Reusable UI components
-        │   ├── Nav.jsx             # Navigation bar
-        │   ├── Footer.jsx          # Footer component
-        │   ├── ProtectedRoute.jsx  # Auth route guard
-        │   └── ...
-        ├── Pages/                  # Page components
-        │   ├── Login.jsx           # Login page
-        │   ├── Register.jsx        # Registration page
-        │   ├── Dashboard.jsx       # Main dashboard
-        │   ├── Wallets.jsx         # Wallet management
-        │   ├── Transaction.jsx     # Transaction history
-        │   ├── Loan.jsx            # Loan applications
-        │   └── ComingSoon.jsx      # Placeholder page
-        └── services/               # API & Auth services
-            ├── AuthProvider.jsx    # Auth context provider
-            ├── authService.js      # API calls (login, register)
-            └── config.jsx          # API configuration
+        ├── Components/
+        │   ├── Common/             # Shared UI elements (nav, footer, modals, loaders, protected routes)
+        │   ├── Wallets/            # Wallet-related UI (list, details, empty states)
+        │   ├── Transactions/       # Transaction creation form
+        │   ├── Support/            # Ticket list/detail/forms
+        │   └── Admin/              # Admin tables for users, wallets, loans
+        ├── Pages/                  # Route-level pages
+        │   ├── Auth/               # Login, register, OAuth redirect, wrapper
+        │   ├── Common/             # Dashboard, analytics, support, transactions, layout
+        │   ├── Wallets/            # Wallet pages (list, create)
+        │   └── Loans/              # Loan page
+        ├── context/                # React contexts (auth, tickets)
+        ├── constants/              # Frontend constants (e.g. ticket types)
+        ├── services/               # API service wrappers (auth, wallets, loans, tickets, users, transactions)
+        ├── App.jsx                 # Root app component & routing
+        └── main.jsx                # React entry point
 ```
 
 ## 🚀 Getting Started
