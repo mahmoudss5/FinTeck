@@ -19,17 +19,37 @@ export const deactivateWallet = async (walletId) => {
    return result;
 }
 
-export const transferMoney = async (data) => {
-   console.log('recived data from transfer money service '+data.senderWalletId+' '+data.receiverUserName+' '+data.amount+' '+data.currency)
+export const transferMoney = async (data,idempotencyKey) => {
+   console.log('Sending transfer request with data:', data)
+   console.log('Headers:', {
+      ...getHeaders(),
+      'Idempotency-Key':idempotencyKey
+   })
+   
    const response =await fetch(`${API_BASE_URL}/wallets/api/transfer`,{
-    method:"PUT",
-    headers:getHeaders(),
-    body:JSON.stringify(data)
+   method:"PUT",
+   headers:{
+      ...getHeaders(),
+      'Idempotency-Key':idempotencyKey
+   },
+   body:JSON.stringify(data)
    })     
    
    if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.message || `HTTP error! status: ${response.status}`)
+      const contentType = response.headers.get("content-type");
+      let errorMessage = `HTTP error! status: ${response.status}`;
+      
+      if (contentType && contentType.includes("application/json")) {
+         const error = await response.json();
+         console.error('Backend error response:', error);
+         errorMessage = error.message || error.error || errorMessage;
+      } else {
+         const errorText = await response.text();
+         console.error('Backend error text:', errorText);
+         errorMessage = errorText || errorMessage;
+      }
+      
+      throw new Error(errorMessage);
    }
    
    const result=await response.json()

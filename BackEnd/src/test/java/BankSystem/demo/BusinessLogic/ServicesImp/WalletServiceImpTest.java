@@ -452,7 +452,7 @@ class WalletServiceImpTest {
                                 Wallet.class, 1L);
 
                 RuntimeException exception = assertThrows(RuntimeException.class,
-                                () -> walletService.recover(lockException, 1L, 2L, 100.00));
+                                () -> walletService.recover(lockException, new TransactionRequestDTO()));
 
                 assertEquals("Transfer failed due to high concurrency. Please try again later.",
                                 exception.getMessage());

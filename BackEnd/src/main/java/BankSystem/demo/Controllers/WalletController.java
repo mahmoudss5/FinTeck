@@ -1,17 +1,22 @@
 package BankSystem.demo.Controllers;
 
+import BankSystem.demo.Aspect.Preformance.Idempotent;
 import BankSystem.demo.BusinessLogic.Services.WalletService;
 import BankSystem.demo.DataAccessLayer.DTOs.Wallet.WalletRequestDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.Wallet.WalletResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springdoc.core.service.GenericParameterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import BankSystem.demo.DataAccessLayer.DTOs.Transaction.TransactionRequestDTO;
 import BankSystem.demo.DataAccessLayer.DTOs.Transaction.TransactionResponseDTO;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Tag(name = "Wallet Controller", description = "APIs for managing wallets")
 @AllArgsConstructor
@@ -20,8 +25,9 @@ import java.util.List;
 public class WalletController {
 
   private final WalletService walletService;
+    private final GenericParameterService parameterBuilder;
 
-  @Operation(summary = "Create Wallet", description = "Create a new wallet for a user")
+    @Operation(summary = "Create Wallet", description = "Create a new wallet for a user")
   @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
   @PostMapping("/create")
   public ResponseEntity<WalletResponseDTO> createWallet(@RequestBody @Valid WalletRequestDTO walletRequestDTO) {
@@ -61,7 +67,18 @@ public class WalletController {
     return ResponseEntity.ok(response);
   }
 
-  @Operation(summary = "Transfer Funds", description = "Transfer funds between two wallets")
+  @Idempotent(ttl = 5, timeUnit = TimeUnit.MINUTES)
+  @Operation(summary = "Transfer Funds",
+          description = "Transfer funds between two wallets",
+          parameters ={
+                  @Parameter(
+                          name = "Idempotency-Key",
+                          in = ParameterIn.HEADER,
+                          required = true,
+                          example = "123e4567-e89b-12d3-a456-426614174000"
+                  )
+          }
+  )
   @ResponseStatus(org.springframework.http.HttpStatus.OK)
   @PutMapping("/transfer")
   public ResponseEntity<TransactionResponseDTO> transferFunds(

@@ -59,6 +59,7 @@ public class UserController {
         UserResponseDTO response = userService.promoteToAdmin(userId);
         return ResponseEntity.ok(response);
     }
+
     // todo: remove the wallets response List from user details
     @ResponseStatus(org.springframework.http.HttpStatus.OK)
     @Operation(summary = "Get Current User Details", description = "Retrieve details of the currently authenticated user")

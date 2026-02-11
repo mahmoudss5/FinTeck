@@ -5,6 +5,7 @@ import BankSystem.demo.Aspect.Preformance.PerformanceAspect;
 import BankSystem.demo.Aspect.Security.OnlyForSameUser;
 import BankSystem.demo.Aspect.Security.RequiresAdmin;
 import BankSystem.demo.BusinessLogic.Services.TransactionService;
+import BankSystem.demo.Config.CurrentUserProvider;
 import BankSystem.demo.DataAccessLayer.DTOs.Transaction.TransactionResponseDTO;
 import BankSystem.demo.DataAccessLayer.Entites.Status;
 import BankSystem.demo.DataAccessLayer.Entites.Transaction;
@@ -12,6 +13,7 @@ import BankSystem.demo.DataAccessLayer.Entites.Wallet;
 import BankSystem.demo.DataAccessLayer.Repositories.TransactionRepositorie;
 import BankSystem.demo.DataAccessLayer.Repositories.WalletRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,12 +23,16 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.stream;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionServiceImp implements TransactionService {
 
     private final TransactionRepositorie transactionRepository;
     private final WalletRepository walletRepository;
+    private  final CurrentUserProvider currentUserProvider;
 
     @Override
     @PerformanceAspect
@@ -196,6 +202,9 @@ public class TransactionServiceImp implements TransactionService {
         List<TransactionResponseDTO> allTransactions = new ArrayList<>();
         for (Wallet wallet : allWallets) {
             List<TransactionResponseDTO> transactions = findAllTransactionsByWalletId(wallet.getId());
+            if (transactions.isEmpty()){
+                log.info("No transactions found for wallet: " + wallet.getId());
+            }
            for(TransactionResponseDTO transaction : transactions) {
                 allTransactions.add(transaction);
            }
@@ -217,6 +226,17 @@ public class TransactionServiceImp implements TransactionService {
 
         transactionRepository.save(transaction);
     }
+
+    @Override
+    public List<TransactionResponseDTO> getAllTransactionsForUserBetaVersion() {
+
+        Long userId=currentUserProvider.getCurrentUserId();
+        return transactionRepository.findAllTransactionsRelatedToUser(userId)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
 
     // Helper method to convert Transaction to DTO
     private TransactionResponseDTO convertToDTO(Transaction transaction) {

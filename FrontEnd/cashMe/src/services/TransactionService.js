@@ -17,7 +17,7 @@ export const getAllTransactions = async () => {
 
 // need to edited the api link this is fake one until the backend is ready
 export const getAllUserTransactions = async () => {
-    const response = await fetch(`${API_BASE_URL}/transactions/api/current-user`, {
+    const response = await fetch(`${API_BASE_URL}/transactions/api/user-All-transactions`, {
         method: "GET",
         headers: getHeaders(),
     });

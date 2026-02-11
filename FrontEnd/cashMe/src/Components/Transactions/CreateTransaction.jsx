@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import Modal from "../Common/Modal";
 import { useNavigate } from "react-router-dom";
 import { transferMoney } from "../../services/WalletService";
+import { v4 as uuidv4 } from 'uuid';
+import {useEffect} from "react";
 export default function CreateTransaction() {
     const navigate = useNavigate();
     const [error,setError] = useState(''); 
     const [submit,setSubmit] = useState(false);
+    const [idempotencyKey,setIdempotencyKey] = useState('');
+
+    useEffect(() => {
+        const idempotencyKey = uuidv4();
+        setIdempotencyKey(idempotencyKey);
+        console.log(idempotencyKey);
+    }, []);
+
 
     function handleClose() {
         navigate('../');
@@ -16,7 +26,7 @@ export default function CreateTransaction() {
         setSubmit(true);
         const formData = new FormData(e.target);
         const receiverUserName = formData.get('receiverUsername');
-        const amount = Number(formData.get('amount'));
+        const amount = formData.get('amount'); // Keep as string for BigDecimal
         const currency = formData.get('currency');
         const senderWalletId = Number(formData.get('senderWalletId'));
         const data={
@@ -25,12 +35,15 @@ export default function CreateTransaction() {
             amount,
             currency
         }
+        console.log('Data being sent:', JSON.stringify(data, null, 2));
+        console.log('Idempotency Key:', idempotencyKey);
         try {
-            const response = await transferMoney(data);
-            console.log(response);
+            const response = await transferMoney(data,idempotencyKey);
+            console.log('Transfer successful:', response);
             navigate('../');
         } catch (error) {
-            console.log(error);
+            console.error('Transfer failed:', error);
+            console.error('Error message:', error.message);
             setError(error.message);
             setSubmit(false);
         }finally{
@@ -69,7 +82,7 @@ export default function CreateTransaction() {
 
             {/* Form */}
             <form onSubmit={handleSubmit}  className="p-6 space-y-5">
-                 <div>
+                <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                         Sender wallet id
                     </label>
@@ -124,13 +137,17 @@ export default function CreateTransaction() {
                         name="currency"
                         className="w-full bg-[#242424] border border-amber-900/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500/50 transition-colors cursor-pointer"
                     >
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="EGP">EGP</option>
-                        <option value="JPY">JPY</option>
-                        <option value="AUD">AUD</option>
-                        <option value="CAD">CAD</option>
-                        <option value="Other">Other</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="CHF">CHF - Swiss Franc</option>
+                        <option value="CNY">CNY - Chinese Yuan</option>
+                        <option value="SEK">SEK - Swedish Krona</option>
+                        <option value="NZD">NZD - New Zealand Dollar</option>
+                        <option value="EGP">EGP - Egyptian Pound</option>
                     </select>
                 </div>
                 {error && (

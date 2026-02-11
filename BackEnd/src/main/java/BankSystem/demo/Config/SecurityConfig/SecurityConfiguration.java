@@ -68,7 +68,7 @@ public class SecurityConfiguration {
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
 
         // Allow specific headers
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type" ,"Idempotency-Key"));
 
       // Allow credentials (cookies, authorization headers, etc.)
         configuration.setAllowCredentials(true);

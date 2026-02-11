@@ -211,8 +211,7 @@ public class WalletServiceImp implements WalletService {
 
     // this function will be called if all retry attempts fail
     @Recover
-    public Boolean recover(ObjectOptimisticLockingFailureException e, Long fromWalletId, Long toWalletId,
-            Double amount) {
+    public TransactionResponseDTO recover(ObjectOptimisticLockingFailureException e, TransactionRequestDTO transactionRequestDTO) {
         log.error("TransferFunds failed after retries due to concurrent modification: {}", e.getMessage());
         throw new RuntimeException("Transfer failed due to high concurrency. Please try again later.");
     }

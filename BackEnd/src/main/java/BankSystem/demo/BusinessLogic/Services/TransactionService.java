@@ -14,4 +14,5 @@ public interface TransactionService {
     List<TransactionResponseDTO> findAllTransactionsByWalletId(Long walletId);
     List<TransactionResponseDTO> getAllTransactionsForCurrentUser();
     void recordTransaction(Wallet sender, Wallet receiver, BigDecimal amount);
+    List<TransactionResponseDTO> getAllTransactionsForUserBetaVersion();
 }
